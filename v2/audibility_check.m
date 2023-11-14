@@ -1,4 +1,4 @@
-function img_list_valid = verify_image_sources(img_list, walls, R)
+function img_list_valid = audibility_check(img_list, walls, R)
 % Takes a receiver and a list of image sources and checks whether the
 % reflection path is valid
 % Also it constructs a set of segments corresponding to the actual 
@@ -7,16 +7,13 @@ function img_list_valid = verify_image_sources(img_list, walls, R)
     i_valid = 1;       
     for i = 1:length(img_list)  % "audibility check" for each image source
         
-        % init "segments" field
-        img_list(i).segments = struct('start', [], 'end', []);
-        
-        S = img_list(i);
-        order = length(S.path);        
+        S = img_list(i); 
+        S.idx = i;
         all_segments_ok = 1;
         last_segment_ok = 1;
         
         % 0'th order (i.e. original source) does not have to be validated
-        if order > 0 
+        if S.order > 0 
             % Backtracking starts from the receiver and through the last
             % stage of the reflection path
             prev = R.location;  
@@ -65,16 +62,14 @@ function img_list_valid = verify_image_sources(img_list, walls, R)
                    % if it crosses the next wall on the path but not others
                    % --> the segment is valid and we should store
                    if ~crosses_others
-                       segment = struct();                   
-                       segment.start = prev;
-                       segment.end = P_int;
-                       img_list(i).segments = concat_structs(img_list(i).segments, segment);
+                       new_segment = LineSegment(prev, P_int);
+                       segments = [S.segments; new_segment];     
+                       S = S.set_segments(segments);
                    else
                        all_segments_ok = 0;
                    end
                else
                    all_segments_ok = 0;
-                   %break;
                end
                
                % continue with the next path segment
@@ -98,34 +93,18 @@ function img_list_valid = verify_image_sources(img_list, walls, R)
             % if condition for the last segment is met - it is also a valid
             % segment and we should store
             if last_segment_ok
-                segment = struct();            
-                segment.start = prev;
-                segment.end = next; 
-                img_list(i).segments = concat_structs(img_list(i).segments, segment); 
+                new_segment = LineSegment(prev, next);
+                segments = [S.segments; new_segment];     
+                S = S.set_segments(segments);
             end            
         end 
         
         % if all segments were OK --> the whole path is OK and we should
         % store
         if all_segments_ok && last_segment_ok
-            img_list(i).idx = i;
-            img_list_valid(i_valid, :) = img_list(i);            
+            img_list_valid(i_valid, :) = S;            
             i_valid = i_valid + 1;
         end
         
     end
-end
-
-
-% helper function for concatenating structs into a struct array
-% discards empty structs
-% TODO put in common function
-function C = concat_structs(A, B)
-    if (length(A) == 1) && all(structfun(@isempty, A))
-        C = B; 
-    elseif (length(B) == 1) && all(structfun(@isempty, B))
-        C = A;
-    else
-        C = [A; B];
-    end 
 end

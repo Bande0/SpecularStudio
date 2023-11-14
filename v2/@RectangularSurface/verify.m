@@ -20,9 +20,14 @@ function obj = verify(obj)
 
     % check if any edge is parallel to at least one coordinate axis
     % --> Angle between a vector v and the three unit axis vectors:
-    % arccos(v*eye(3) / norm(v)) ==> v / norm(v);
-    V = [v1' v2' v3' v4']; 
-    V = V ./ vecnorm(V);
+    % arccos(v*eye(3) / norm(v)) ==> v / norm(v);   
+    try
+        V = [v1' v2' v3' v4'];
+        V = V ./ vecnorm(V);
+    catch
+        % vecnorm() doesn't work in Matlab R2016A
+        V = [(v1 / norm(v1))'  (v2 / norm(v2))' (v3 / norm(v3))' (v4 / norm(v4))'];
+    end
     % ---> at least one cosine should be +/- 1
     if (isempty(find(abs(V) == 1)))
         error('ERROR: Surface nr. %d is not parallel to any coordinate axis', obj.idx); 

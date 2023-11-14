@@ -56,7 +56,8 @@ function img_list = generate_image_sources(P, walls, max_order)
             % surface
             [P_m, ~] = walls(i).mirror_point(P.location);
             img = PointSource(P_m);
-            path = concat_structs(P.path, struct('location', P.location, 'wall', walls(i)));       
+            new_path_segment = PathSegment(P.location, walls(i));
+            path = [P.path; new_path_segment];     
             img = img.set_path(path);
             img = img.set_order(length(path));
             % recursively call the function for the image source and
@@ -69,17 +70,4 @@ function img_list = generate_image_sources(P, walls, max_order)
         end
     end
     
-end
-
-% helper function for concatenating structs into a struct array
-% discards empty structs
-% TODO PULL OUT THIS FUNCTION FROM HERE
-function C = concat_structs(A, B)
-    if (length(A) == 1) && all(structfun(@isempty, A))
-        C = B; 
-    elseif (length(B) == 1) && all(structfun(@isempty, B))
-        C = A;
-    else
-        C = [A; B];
-    end 
 end
