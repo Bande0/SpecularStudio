@@ -1,6 +1,6 @@
 function img_list = generate_image_sources(P, walls, max_order)
 % Recursively generates image sources of a source P for the room geometry 
-% defined in the "walls" argument. 
+% defined by the list of RectangularSurface objects in the "walls" argument. 
 %
 % The function recursively mirrors sources onto all planes in the geometry
 % by doing the following:
@@ -21,8 +21,7 @@ function img_list = generate_image_sources(P, walls, max_order)
 %         .location - x/y/z coordinates of the source
 %         .path - struct array describing the reflection path through which
 %               the source has been obtained (empty struct for original source)
-%     walls: struct array containing a list of surfaces defining the room
-%               geometry
+%     walls: list of RectangularSurface objects defining the room geometry
 %     order: maximum reflection order to calculate (i.e. recursion depth)
 %
 % Output Arguments:
@@ -39,8 +38,7 @@ function img_list = generate_image_sources(P, walls, max_order)
     img_list = struct('location', [], 'path', []);
     
     % if input P is a 0'th order image source (i.e: the original source),
-    % append to the list
-    %if ~isfield(P.path, 'wall')
+    % append to the list    
     if isempty(P.path)
         img_list = concat_structs(img_list, P);
     end       
@@ -60,7 +58,7 @@ function img_list = generate_image_sources(P, walls, max_order)
         if isempty(P.path) || (P.path(end).wall.idx ~= i)
             % calculate the location of the image source wrt. the i'th
             % surface
-            [P_m, ~] = mirror_point(P.location, walls(i));
+            [P_m, ~] = walls(i).mirror_point(P.location);
             img.location = P_m;      
             img.path = concat_structs(P.path, struct('location', P.location, 'wall', walls(i)));                        
             % recursively call the function for the image source and

@@ -46,7 +46,7 @@ function img_list_valid = verify_image_sources(img_list, walls, R)
             for j = 1:length(S.path)                              
                % Check if the current segment crosses the next wall on 
                % the path
-               [P_int, crosses_next] = intersect(prev, next, W);                            
+               [P_int, crosses_next] = W.intersect(prev, next);                            
                
                % now we also need to check that this segment doesn't cross
                % any other walls on its way
@@ -55,7 +55,7 @@ function img_list_valid = verify_image_sources(img_list, walls, R)
                    for k = 1:length(walls)
                        % Check every wall except the one it HAS to cross             
                        if k ~= W.idx 
-                           [~, tmp] = intersect(prev, P_int, walls(k));
+                           [~, tmp] = walls(k).intersect(prev, P_int);
                            if tmp
                                crosses_others = 1;                
                            end
@@ -90,7 +90,7 @@ function img_list_valid = verify_image_sources(img_list, walls, R)
             % intersect anyting
             for k = 1:length(walls)
                 W = walls(k);  
-                [~, crosses] = intersect(prev, next, W);
+                [~, crosses] = W.intersect(prev, next);
                 if crosses
                     last_segment_ok = 0;                
                 end
