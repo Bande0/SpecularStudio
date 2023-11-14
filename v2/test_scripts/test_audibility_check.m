@@ -39,14 +39,12 @@ i_wall = i_wall + 1;
                                 
                     
 % Define a source to be mirrored      
-S = struct();
-S.location = [3, 4, 2];
+S = PointSource([3, 4, 2]);
 % Define a receiver
-R.location = [5, 2, 2];     
-
+R = Receiver([5, 2, 2]);
 
 % generate all image sources for a point source
-max_order = 4;
+max_order = 5;
 src_list = generate_image_sources(S, walls, max_order);
 % run an audibility check on the image sources
 src_list_valid = verify_image_sources(src_list, walls, R);

@@ -10,7 +10,7 @@ function img_list = generate_image_sources(P, walls, max_order)
 % sources (where N > 0) again onto all surfaces EXCEPT for the one onto
 % which they have been mirrored onto most recently (because that would give
 % back an N-1'th image)
-% - the "order" argument sets the recursion depth
+% - the "max_order" argument sets the recursion counter
 % 
 % OBS: this function generates ALL image sources for order 0:N - also
 % "invalid" ones --> Validation of reflection paths must be done
@@ -22,25 +22,21 @@ function img_list = generate_image_sources(P, walls, max_order)
 %         .path - struct array describing the reflection path through which
 %               the source has been obtained (empty struct for original source)
 %     walls: list of RectangularSurface objects defining the room geometry
-%     order: maximum reflection order to calculate (i.e. recursion depth)
+%     max_order: reflection order to calculate (i.e. recursion depth)
 %
 % Output Arguments:
 %     img_list: struct array containing a list of image sources in the same
 %               format as the input source
         
-    % if the source in the argument has no path (i.e. orignal source),
-    % initialize it
-    if ~isfield(P, 'path')
-       P.path = []; 
-    end
-
+ 
     % initialize returned list
-    img_list = struct('location', [], 'path', []);
+    img_list = [];
     
     % if input P is a 0'th order image source (i.e: the original source),
-    % append to the list    
+    % append to the list as the 0'th order source   
     if isempty(P.path)
-        img_list = concat_structs(img_list, P);
+        P = P.set_order(0);
+        img_list = [img_list; P];
     end       
     
     % stop at max recursion depth
@@ -59,15 +55,17 @@ function img_list = generate_image_sources(P, walls, max_order)
             % calculate the location of the image source wrt. the i'th
             % surface
             [P_m, ~] = walls(i).mirror_point(P.location);
-            img.location = P_m;      
-            img.path = concat_structs(P.path, struct('location', P.location, 'wall', walls(i)));                        
+            img = PointSource(P_m);
+            path = concat_structs(P.path, struct('location', P.location, 'wall', walls(i)));       
+            img = img.set_path(path);
+            img = img.set_order(length(path));
             % recursively call the function for the image source and
-            % decrement the max_order counter            
+            % decrement the order counter            
             list = generate_image_sources(img, walls, max_order-1);
             % append the image source and the list returned from the
             % recursion to the image list
-            img_list = concat_structs(img_list, img);
-            img_list = concat_structs(img_list, list);               
+            img_list = [img_list; img];
+            img_list = [img_list; list];
         end
     end
     
@@ -75,6 +73,7 @@ end
 
 % helper function for concatenating structs into a struct array
 % discards empty structs
+% TODO PULL OUT THIS FUNCTION FROM HERE
 function C = concat_structs(A, B)
     if (length(A) == 1) && all(structfun(@isempty, A))
         C = B; 
