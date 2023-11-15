@@ -86,13 +86,63 @@ i_wall = i_wall + 1;
 
 % --------------- Source + Receiver positions --------------- %
 % Define a true pointsource      
-S = PointSource([3, 5, 2]);
-% Define receivers
-R = [Receiver([4, 2, 2]),...
-     Receiver([2, 2, 2])];
+S = PointSource([5, 5, 2]);
+ 
+% --------------- Mic array topology --------------- %
+N = 16;                     % num. mics
+topology = 'multi';         % archimedean | dougherty | multi
+r0 = 0.2;                  % minimum radius
+rmax = 1.0;                 % maximum radius
+
+% height and width of the rectangle that the topology should be "squished"
+% into
+squish = true;  % enable/disable squishing
+rect_h = 0.5;
+rect_w = 2;
+
+% ------ topology- dependent parameters
+
+% -- Archimedean
+phi = 4*pi;
+% phi = 3*pi;
+
+% -- Dougherty log-spiral
+v_dougherty = 15/32 * pi;
+
+% -- Multi Dougherty log-spiral
+N_a  = 4;   % number of spiral arms
+%v_multi = 5/16 * pi;
+v_multi = 3/10 * pi;
+
+% N_a  = 7;
+% v_multi = 3/8 * pi; 
+
+% ------- Create mic topology
+array_params.topology = topology;
+array_params.N = N;
+array_params.r0 = r0;
+array_params.rmax = rmax;
+array_params.archimedean.phi = phi;
+array_params.dougherty.v = v_dougherty;
+array_params.multi.N_a = N_a;
+array_params.multi.v = v_multi;
+array_params.squish_params.do_squish = squish;
+array_params.squish_params.height = rect_h;
+array_params.squish_params.width = rect_w;
+array_params.plane = 'xz';
+array_params.x_offset = 3;
+array_params.y_offset = 2;
+array_params.z_offset = 1;
+
+R = create_array_topology(array_params);
+
+% R = [Receiver([4, 2, 2]),...
+%      Receiver([2, 2, 2])];
+
+
 
 % generate all possible image sources for a point source
-max_order = 5;
+max_order = 1;
 tic;
 img_list_all = generate_image_sources(S, walls, max_order);
 
@@ -114,14 +164,71 @@ for i = 1:length(R)
 end
 toc;
 
+%%  plotting
+colors = {[0 0.4470 0.7410],...
+              [0.8500 0.3250 0.0980],... 
+              [0.9290 0.6940 0.1250],...
+              [0.4940 0.1840 0.5560],...
+              [0.4660 0.6740 0.1880],...
+              [0.3010 0.7450 0.9330],...
+              [0.6350 0.0780 0.1840],...
+             };
+         
+    
 figure()
-subplot(length(R), 1, 1)
-plot(ir{1});
-subplot(length(R), 1, 2)
-plot(ir{2});
 
-%%
-Y = [y{1}; y{2}];
-soundsc(x, fs);
-pause(len_s + 1);
-soundsc(Y, fs);
+% plotting walls
+for w_idx = 1:length(walls)
+    wp = walls(w_idx).points;
+    n = walls(w_idx).normal;
+
+    fill3(wp(:,1), wp(:,2), wp(:,3), 'g', 'FaceAlpha', 0.5);  % surface
+    hold on    
+    quiver3(wp(1,1), wp(1,2), wp(1,3),...
+            n(1), n(2), n(3),'LineWidth', 2, 'MaxHeadSize', 0.8);  % line normal vector
+    quiver3(wp(2,1), wp(2,2), wp(2,3),...
+            n(1), n(2), n(3),'LineWidth', 2, 'MaxHeadSize', 0.8);  % line normal vector
+    quiver3(wp(3,1), wp(3,2), wp(3,3),...
+            n(1), n(2), n(3),'LineWidth', 2, 'MaxHeadSize', 0.8);  % line normal vector   
+    quiver3(wp(4,1), wp(4,2), wp(4,3),...
+            n(1), n(2), n(3),'LineWidth', 2, 'MaxHeadSize', 0.8);  % line normal vector       
+
+end
+
+% plotting sources
+for i = 1:length(S)
+    src = S(i).location;
+    plot3(src(1), src(2), src(3),'bx','MarkerSize',10,'LineWidth',3);
+end
+
+% plotting receivers
+for i = 1:length(R)
+    rcv = R(i).location;
+    plot3(rcv(1), rcv(2), rcv(3),'k.','MarkerSize',15);
+end
+
+grid on
+xlim([-6 10])
+ylim([-6 10])
+zlim([-6 10])
+axis square
+
+% plotting IRs
+
+figure()
+cols = floor(sqrt(length(R)));
+rows = length(R) / cols;
+cnt = 1;
+for i = 1:rows
+    for j = 1:cols
+        subplot(rows, cols, cnt)
+        plot(ir{cnt});
+        cnt = cnt + 1;
+    end
+end
+% 
+% %%
+% Y = [y{1}; y{2}];
+% soundsc(x, fs);
+% pause(len_s + 1);
+% soundsc(Y, fs);

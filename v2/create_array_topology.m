@@ -1,9 +1,13 @@
-function [ mic_coords, params ] = create_array_topology( params )
+function [ R, params ] = create_array_topology( params )
     
 topology = params.topology; % topology type - archimedean | dougherty | multi
 N = params.N;               % no. mics
 r0 = params.r0;             % minimum radius
 rmax = params.rmax;         % maximum radius
+plane = params.plane;
+x_offset = params.x_offset;
+y_offset = params.y_offset;
+z_offset = params.z_offset;
 
 % "squish" the resulting topology into a containing rectangle
 squish_params = params.squish_params;
@@ -12,27 +16,43 @@ squish_params = params.squish_params;
 if strcmp(topology, 'archimedean')        
     phi = params.archimedean.phi;   
 
-    mic_coords = zeros(3, N);
+    R = [];
     for n = 1:N
         theta = (n-1)*phi/(N-1);
         rn =  r0 + (rmax - r0)/phi * theta;
-
-        mic_coords(1, n) = rn * cos(theta);
-        mic_coords(2, n) = rn * sin(theta);
+    
+        x = rn * cos(theta);
+        y = rn * sin(theta);
+        if strcmp(plane, 'xy') 
+            mic = Receiver([x, y, 0]);
+        elseif strcmp(plane, 'xz') 
+            mic = Receiver([x, 0, y]);
+        else
+            error('ERROR! Unsupported plane: %s', plane)
+        end
+        R = [R mic];
     end
 % --------- Dougherty log-spiral     
 elseif strcmp(topology, 'dougherty')       
     v = params.dougherty.v;   % constant angle parameter 
 
-    mic_coords = zeros(3, N);
+    R = [];
     l_max = r0*sqrt(1 + cot(v)^2)/cot(v) * (rmax/r0 - 1);
     for n = 1:N
         l_n = (n-1)/(N-1)*l_max;
         theta = 1/cot(v) * log(1 + (cot(v)*l_n / r0*sqrt(1 + cot(v)^2)));
         rn = r0 * exp(cot(v) * theta);
-
-        mic_coords(1, n) = rn * cos(theta);
-        mic_coords(2, n) = rn * sin(theta);
+        
+        x = rn * cos(theta);
+        y = rn * sin(theta);
+        if strcmp(plane, 'xy') 
+            mic = Receiver([x, y, 0]);
+        elseif strcmp(plane, 'xz') 
+            mic = Receiver([x, 0, y]);
+        else
+            error('ERROR! Unsupported plane: %s', plane)
+        end
+        R = [R mic];
     end
 % --------- Multi Dougherty log-spiral
 elseif strcmp(topology, 'multi')        
@@ -49,7 +69,7 @@ elseif strcmp(topology, 'multi')
     N = N_m * N_a;      % new N (rounded)
     params.N = N;       % storing new N in return struct
                 
-    mic_coords = zeros(3, N);
+    R = [];
     l_max = r0*sqrt(1 + cot(v)^2)/cot(v) * (rmax/r0 - 1);
     idx = 0;
     for m = 1:N_a
@@ -65,8 +85,16 @@ elseif strcmp(topology, 'multi')
             % rotating the thetas based on arm index
             theta = theta + (m-1)/N_a * 2*pi;
 
-            mic_coords(1, idx) = rn * cos(theta);
-            mic_coords(2, idx) = rn * sin(theta);
+            x = rn * cos(theta);
+            y = rn * sin(theta);
+            if strcmp(plane, 'xy') 
+                mic = Receiver([x, y, 0]);
+            elseif strcmp(plane, 'xz') 
+                mic = Receiver([x, 0, y]);
+            else
+                error('ERROR! Unsupported plane: %s', plane)
+            end
+            R = [R mic];
         end
     end
 else 
@@ -78,19 +106,59 @@ if squish_params.do_squish
     height = params.squish_params.height;
 	width = params.squish_params.width; 
     
-    current_height = max(mic_coords(2,:)) - min(mic_coords(2,:));
-    current_width = max(mic_coords(1,:)) - min(mic_coords(1,:));
+    rm = [R(:).location];
+    rm = reshape(rm, 3, length(R));
+    
+    current_width = max(rm(1,:)) - min(rm(1,:));
+    if strcmp(plane, 'xy') 
+        for i = 1:length(R)
+            current_height = max(rm(2,:)) - min(rm(2,:));
+        end      
+    elseif strcmp(plane, 'xz') 
+        for i = 1:length(R)
+            current_height = max(rm(3,:)) - min(rm(3,:));
+        end      
+    else
+        error('ERROR! Unsupported plane: %s', plane)
+    end
 
     h_squish = height / current_height;
     w_squish = width / current_width;
 
     % we don't "stretch", just "squish"
     if (w_squish < 1)
-        mic_coords(1,:) = w_squish * mic_coords(1,:);
+        for i = 1:length(R)
+            R(i).location(1) = w_squish * R(i).location(1);
+        end
     end
     if (h_squish < 1)
-        mic_coords(2,:) = h_squish * mic_coords(2,:);
+        if strcmp(plane, 'xy') 
+            for i = 1:length(R)
+                R(i).location(2) = h_squish * R(i).location(2);
+            end      
+        elseif strcmp(plane, 'xz') 
+            for i = 1:length(R)
+                R(i).location(3) = h_squish * R(i).location(3);
+            end      
+        else
+            error('ERROR! Unsupported plane: %s', plane)
+        end
     end
 end
+
+% adding offset to mics
+for i = 1:length(R)
+    R(i).location(1) = R(i).location(1) + x_offset;
+    if strcmp(plane, 'xy') 
+        R(i).location(2) = R(i).location(2) + y_offset;
+        R(i).location(3) = R(i).location(3) + z_offset;
+    elseif strcmp(plane, 'xz') 
+        R(i).location(2) = R(i).location(2) + z_offset;
+        R(i).location(3) = R(i).location(3) + y_offset;
+    else
+        error('ERROR! Unsupported plane: %s', plane)
+    end    
+end
+
 
 end
