@@ -36,10 +36,6 @@ S = PointSource([6, -1, 2]);
 % generate all image sources for a point source
 src_list = generate_image_sources(S, walls, 3);
 
-% number of N'th order image sources
-% N = 3;
-% length(find(cellfun('length', {img_list.path}) == N))
-
 %%  plotting
 figure()
 

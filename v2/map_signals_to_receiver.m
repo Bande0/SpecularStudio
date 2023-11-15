@@ -1,4 +1,4 @@
-function [y, ir] = map_signals_to_receiver(r, img_src_list, c, fs)
+function [y, ir] = map_signals_to_receiver(rm, img_src_list, c, fs)
 % Simulates the signals seen by a microphone array in a simple soundfield
 % including a point source and specular reflections modelled as image
 % sources
@@ -23,6 +23,8 @@ function [y, ir] = map_signals_to_receiver(r, img_src_list, c, fs)
 %
 %   y:  microphone signal
 %   ir: Impulse response between mic and source
+
+r = rm.location';
 
 if ~all(size(r) == [3 1])
    error('ERROR! Microphone geometry has wrong format - it must be an array of size 3 x 1'); 
@@ -58,6 +60,7 @@ L = floor(no_samples / N)*N;
 
 % ref signal (i.e. true source) - it is always the first in the list
 x = squeeze(img_src_list(1).emitted_signal(1:L));
+% [Pxx,F] = pwelch(x, 1024, 256, 256, fs);
 x = reshape(x, N, L/N);
 % Duplicate frames to get 50 % overlap
 x = [zeros(N,1), x(:,1:end-1); x];
@@ -68,6 +71,7 @@ X = fft(x, 2*N);
 
 
 d = squeeze(y(1:L));
+% [Pdd,F] = pwelch(d, 1024, 256, 256, fs);
 d = reshape(d, N, L/N);
 % Duplicate frames to get 50 % overlap
 d = [zeros(N,1), d(:,1:end-1); d];
@@ -79,6 +83,13 @@ D = fft(d, 2*N);
 % Compute auto corr and xcorr
 Sxd = mean(conj(X) .* D, 2);
 Sxx = mean(conj(X) .* X, 2);
+
+% semilogx(F, 20*log10(abs(Pxx)));
+% hold on
+% semilogx(F, 20*log10(abs(Pdd)));
+
+% semilogx(20*log10(abs(Sxd ./ Sxx)));
+% hold on
 
 % compute impulse response
 ir = ifft(Sxd ./ Sxx);
