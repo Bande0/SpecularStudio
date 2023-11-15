@@ -142,7 +142,7 @@ R = create_array_topology(array_params);
 
 
 % generate all possible image sources for a point source
-max_order = 1;
+max_order = 2;
 tic;
 img_list_all = generate_image_sources(S, walls, max_order);
 

@@ -41,7 +41,7 @@ function [P_int, contains] = intersect(obj, P1, P2)
     % OBS: we DON'T regard equality as an intersection
     % OBS: equality is not always exactly fulfilled due to numerical
     % precision - threshold value found empirically    
-    thresh = 2*eps;
+    thresh = 1e-14;
     
     if (k <= thresh) || (k >= 1-thresh)
         contains = 0;
