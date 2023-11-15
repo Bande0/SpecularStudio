@@ -244,3 +244,5 @@ for i = 1:length(R)
     Y_out = [Y_out; y{i}];
 end
 audiowrite(fullfile(pwd, ['../../output_files/wet_order_' num2str(max_order) '_mics_' num2str(length(R)) '_topo_' topology '.wav']), Y_out', fs);
+
+audiowrite(fullfile(pwd, ['../../output_files/dry.wav']), x, fs);
