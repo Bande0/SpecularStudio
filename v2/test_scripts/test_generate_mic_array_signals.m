@@ -231,9 +231,16 @@ for i = 1:rows
         cnt = cnt + 1;
     end
 end
-% 
+
 % %%
 % Y = [y{1}; y{2}];
 % soundsc(x, fs);
 % pause(len_s + 1);
 % soundsc(Y, fs);
+
+%%
+Y_out = [];
+for i = 1:length(R)
+    Y_out = [Y_out; y{i}];
+end
+audiowrite(fullfile(pwd, ['../../output_files/wet_order_' num2str(max_order) '_mics_' num2str(length(R)) '_topo_' topology '.wav']), Y_out', fs);
