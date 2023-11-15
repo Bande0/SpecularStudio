@@ -63,8 +63,6 @@ speakers(i_spk).signal_params.amplitude = 1.0;
 % speakers(i_spk).signal_params.amplitude = 1;
 % speakers(i_spk).signal_params.frequency = 600;
 
-% --------------- Reflective surfaces
-i_wall = 1;
 
 % --------------- Mic topology params
 N = 16;                     % num. mics

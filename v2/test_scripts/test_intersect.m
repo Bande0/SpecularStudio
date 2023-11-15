@@ -1,7 +1,7 @@
 close all
 clc
 clear all
-addpath('..\');
+addpath([pwd '/..']);
 
 
 i_wall = 1;

@@ -1,7 +1,7 @@
 close all
 clc
 clear all
-addpath('..\');
+addpath([pwd '/..']);
 
 % --------------- Reflective surfaces
 i_wall = 1;

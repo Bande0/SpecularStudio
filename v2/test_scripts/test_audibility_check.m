@@ -1,10 +1,9 @@
-% close all
+close all
 clc
 clear all
-% addpath('..\');
 addpath([pwd '/..']);
 
-% --------------- Reflective surfaces
+% --------------- Reflective surfaces --------------- %
 i_wall = 1;
 walls(i_wall) = RectangularSurface(i_wall,...
                                    [0,0,0],...
@@ -39,7 +38,7 @@ walls(i_wall) = RectangularSurface(i_wall,...
 i_wall = i_wall + 1; 
                                 
                     
-% Define a source to be mirrored      
+% Define a true pointsource      
 S = PointSource([3, 4, 2]);
 % Define a receiver
 R = Receiver([5, 2, 2]);
