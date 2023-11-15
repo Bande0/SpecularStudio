@@ -142,8 +142,10 @@ R = create_array_topology(array_params);
 
 
 % generate all possible image sources for a point source
-max_order = 2;
+max_order = 6;
 tic;
+
+disp(['Generating all image sources...']);
 img_list_all = generate_image_sources(S, walls, max_order);
 
 img_lists = {};
@@ -153,13 +155,16 @@ ir = {};
 for i = 1:length(R)
     % run an "audibility check" on all image sources and discard the ones that
     % are not reachable through a valid path from the receiver
+    disp(['Running audibility check for mic ' num2str(i) '/' num2str(length(R)) '...']);
     img_lists{i} = audibility_check(img_list_all, walls, R(i));
     % Assign emitted signals to each source (true source + image source) by
     % following the reflection path and applying the absorption from each wall
     % encountered along the way to the emitted signal
+    disp(['Assigning signals to image sources for mic ' num2str(i) '/' num2str(length(R)) '...']);
     img_lists{i} = assign_signals_to_image_sources(img_lists{i}, x);
     % map image source signals as seen by the microphone and estimate
     % impulse response
+    disp(['Mapping signals onto mic ' num2str(i) '/' num2str(length(R)) '...']);
     [y{i}, ir{i}] = map_signals_to_receiver(R(i), img_lists{i}, c, fs);   
 end
 toc;
