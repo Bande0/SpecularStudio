@@ -12,4 +12,8 @@
 
 - Make a plotter class...?
 
+- "Interleaving" generation of all image sources & audibility checking:
+	- don't generate ALL image sources and then audibility check for each receiver individually
+	- instead, when generating an image source, already run the audibility check for all receivers
+
 - Add more advanced absorption modelling (using filtfilt)?
