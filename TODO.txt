@@ -1,0 +1,15 @@
+- Create “master” class containing walls, sources, receivers + all functions
+- create main.m
+- include room + reflection paths plotting into main as well
+- flotting of TFs (not just IFs)
+
+- load configs from json (?) files instead of typing in main
+- Room designer: should export room in config format which the main can load
+- Mic topology designer: should import config from room designer. Should plot mic array topology separately (with “squish rectangle”) and also “in context” in the room
+
+- proper (?) file export of resulting mic signals
+- file export of IRs (format?)
+
+- Make a plotter class...?
+
+- Add more advanced absorption modelling (using filtfilt)?

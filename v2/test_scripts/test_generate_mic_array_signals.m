@@ -142,10 +142,11 @@ R = create_array_topology(array_params);
 
 
 % generate all possible image sources for a point source
-max_order = 6;
+max_order = 1;
 tic;
 
-disp(['Generating all image sources...']);
+no_all_img_src = count_all_image_sources(length(walls), max_order);
+disp(['Generating ' num2str(no_all_img_src) ' image sources...']);
 img_list_all = generate_image_sources(S, walls, max_order);
 
 img_lists = {};
@@ -209,7 +210,7 @@ end
 % plotting receivers
 for i = 1:length(R)
     rcv = R(i).location;
-    plot3(rcv(1), rcv(2), rcv(3),'k.','MarkerSize',15);
+    plot3(rcv(1), rcv(2), rcv(3),'k.','MarkerSize',10);
 end
 
 grid on
@@ -238,11 +239,11 @@ end
 % pause(len_s + 1);
 % soundsc(Y, fs);
 
-%%
-Y_out = [];
-for i = 1:length(R)
-    Y_out = [Y_out; y{i}];
-end
-audiowrite(fullfile(pwd, ['../../output_files/wet_order_' num2str(max_order) '_mics_' num2str(length(R)) '_topo_' topology '.wav']), Y_out', fs);
-
-audiowrite(fullfile(pwd, ['../../output_files/dry.wav']), x, fs);
+% %%
+% Y_out = [];
+% for i = 1:length(R)
+%     Y_out = [Y_out; y{i}];
+% end
+% audiowrite(fullfile(pwd, ['../../output_files/wet_order_' num2str(max_order) '_mics_' num2str(length(R)) '_topo_' topology '.wav']), Y_out', fs);
+% 
+% audiowrite(fullfile(pwd, ['../../output_files/dry.wav']), x, fs);

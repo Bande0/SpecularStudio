@@ -5,7 +5,12 @@ function img_list_valid = audibility_check(img_list, walls, R)
 % reflection path travelled by the sound (for plotting)
 
     i_valid = 1;       
+    reverseStr = '';
     for i = 1:length(img_list)  % "audibility check" for each image source
+                
+        msg = ['Checking image source ' num2str(i) '/' num2str(length(img_list)) '...'];
+        fprintf([reverseStr, msg]);
+        reverseStr = repmat(sprintf('\b'), 1, length(msg));
         
         S = img_list(i); 
         S.idx = i;
@@ -107,4 +112,5 @@ function img_list_valid = audibility_check(img_list, walls, R)
         end
         
     end
+    fprintf('\n');
 end

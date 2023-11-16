@@ -92,8 +92,11 @@ R = [Receiver([4, 2, 2]),...
      Receiver([2, 2, 2])];
 
 % generate all possible image sources for a point source
-max_order = 5;
+max_order = 9;
 tic;
+
+no_all_img_src = count_all_image_sources(length(walls), max_order);
+disp(['Generating ' num2str(no_all_img_src) ' image sources...']);
 img_list_all = generate_image_sources(S, walls, max_order);
 
 img_lists = {};
@@ -103,13 +106,16 @@ ir = {};
 for i = 1:length(R)
     % run an "audibility check" on all image sources and discard the ones that
     % are not reachable through a valid path from the receiver
+    disp(['Running audibility check for mic ' num2str(i) '/' num2str(length(R)) '...']);
     img_lists{i} = audibility_check(img_list_all, walls, R(i));
     % Assign emitted signals to each source (true source + image source) by
     % following the reflection path and applying the absorption from each wall
     % encountered along the way to the emitted signal
+    disp(['Assigning signals to image sources for mic ' num2str(i) '/' num2str(length(R)) '...']);
     img_lists{i} = assign_signals_to_image_sources(img_lists{i}, x);
     % map image source signals as seen by the microphone and estimate
     % impulse response
+    disp(['Mapping signals onto mic ' num2str(i) '/' num2str(length(R)) '...']);
     [y{i}, ir{i}] = map_signals_to_receiver(R(i), img_lists{i}, c, fs);   
 end
 toc;
@@ -120,8 +126,17 @@ plot(ir{1});
 subplot(length(R), 1, 2)
 plot(ir{2});
 
+% %%
+% Y = [y{1}; y{2}];
+% soundsc(x, fs);
+% pause(len_s + 1);
+% soundsc(Y, fs);
+
 %%
-Y = [y{1}; y{2}];
-soundsc(x, fs);
-pause(len_s + 1);
-soundsc(Y, fs);
+Y_out = [];
+for i = 1:length(R)
+    Y_out = [Y_out; y{i}];
+end
+audiowrite(fullfile(pwd, ['../../output_files/wet_order_' num2str(max_order) '.wav']), Y_out', fs);
+
+% audiowrite(fullfile(pwd, ['../../output_files/dry.wav']), x, fs);
