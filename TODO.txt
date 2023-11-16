@@ -1,7 +1,7 @@
 - Create “master” class containing walls, sources, receivers + all functions
 - create main.m
 - include room + reflection paths plotting into main as well
-- flotting of TFs (not just IFs)
+- plotting of TFs (not just IFs)
 
 - load configs from json (?) files instead of typing in main
 - Room designer: should export room in config format which the main can load

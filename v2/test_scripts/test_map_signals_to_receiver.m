@@ -92,7 +92,7 @@ R = [Receiver([4, 2, 2]),...
      Receiver([2, 2, 2])];
 
 % generate all possible image sources for a point source
-max_order = 9;
+max_order = 1;
 tic;
 
 no_all_img_src = count_all_image_sources(length(walls), max_order);
@@ -140,3 +140,27 @@ end
 audiowrite(fullfile(pwd, ['../../output_files/wet_order_' num2str(max_order) '.wav']), Y_out', fs);
 
 % audiowrite(fullfile(pwd, ['../../output_files/dry.wav']), x, fs);
+
+%%
+room_config = struct();
+room_config.walls = walls;
+room_config.sources = S;
+write_json(room_config, 'C:\git\SpecularStudio\v2\', 'test.json', '..\utility\json_beautifier.py');
+
+
+room_config2_raw = read_json('C:\git\SpecularStudio\v2\test.json');
+
+S2 = PointSource(room_config2_raw.sources.location');
+S2.idx = room_config2_raw.sources.idx;
+S2.segments = room_config2_raw.sources.segments;
+S2.emitted_signal = room_config2_raw.sources.emitted_signal;
+S2.path = room_config2_raw.sources.path;
+S2.order = room_config2_raw.sources.order;
+
+walls2 = [];
+for i = 1:length(room_config2_raw.walls)
+    tmp = room_config2_raw.walls(i);
+    W = RectangularSurface(tmp.idx, tmp.points(1,:), tmp.points(2,:), tmp.points(3,:), tmp.points(4,:), tmp.abs_coeff);
+    walls2 = [walls2 W]; 
+end
+
