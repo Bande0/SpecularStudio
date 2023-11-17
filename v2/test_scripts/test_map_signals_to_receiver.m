@@ -2,7 +2,8 @@
 clc
 clear all
 addpath([pwd '/..']);
-
+addpath([pwd '/../utility']);
+addpath([pwd '/../jsonlab']);
 
 % --------------- Signal properties --------------- %
 fs = 32000;     % sampling rate
@@ -86,7 +87,7 @@ i_wall = i_wall + 1;
 
 % --------------- Source + Receiver positions --------------- %
 % Define a true pointsource      
-S = PointSource([3, 5, 2]);
+S = [PointSource([3, 5, 2])];
 % Define receivers
 R = [Receiver([4, 2, 2]),...
      Receiver([2, 2, 2])];
@@ -97,7 +98,7 @@ tic;
 
 no_all_img_src = count_all_image_sources(length(walls), max_order);
 disp(['Generating ' num2str(no_all_img_src) ' image sources...']);
-img_list_all = generate_image_sources(S, walls, max_order);
+img_list_all = generate_image_sources(S(1), walls, max_order);
 
 img_lists = {};
 y = {};
@@ -140,27 +141,3 @@ end
 audiowrite(fullfile(pwd, ['../../output_files/wet_order_' num2str(max_order) '.wav']), Y_out', fs);
 
 % audiowrite(fullfile(pwd, ['../../output_files/dry.wav']), x, fs);
-
-%%
-room_config = struct();
-room_config.walls = walls;
-room_config.sources = S;
-write_json(room_config, 'C:\git\SpecularStudio\v2\', 'test.json', '..\utility\json_beautifier.py');
-
-
-room_config2_raw = read_json('C:\git\SpecularStudio\v2\test.json');
-
-S2 = PointSource(room_config2_raw.sources.location');
-S2.idx = room_config2_raw.sources.idx;
-S2.segments = room_config2_raw.sources.segments;
-S2.emitted_signal = room_config2_raw.sources.emitted_signal;
-S2.path = room_config2_raw.sources.path;
-S2.order = room_config2_raw.sources.order;
-
-walls2 = [];
-for i = 1:length(room_config2_raw.walls)
-    tmp = room_config2_raw.walls(i);
-    W = RectangularSurface(tmp.idx, tmp.points(1,:), tmp.points(2,:), tmp.points(3,:), tmp.points(4,:), tmp.abs_coeff);
-    walls2 = [walls2 W]; 
-end
-

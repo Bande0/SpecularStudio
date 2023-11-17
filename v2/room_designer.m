@@ -56,12 +56,9 @@ walls(i_wall) = RectangularSurface(i_wall,...
 i_wall = i_wall + 1; 
                                 
                     
-% Define a true pointsource      
+% Define true pointsource(s)      
 S = [PointSource([3, 5, 2]),...
     ];
-% Define a receiver
-R = [Receiver([4, 2, 2]),...
-     Receiver([2, 2, 2])];
 
 %%  plotting
 colors = {[0 0.4470 0.7410],...
@@ -73,7 +70,6 @@ colors = {[0 0.4470 0.7410],...
               [0.6350 0.0780 0.1840],...
              };
          
-    
 figure()
 
 % plotting walls
@@ -100,14 +96,16 @@ for i = 1:length(S)
     plot3(src(1), src(2), src(3),'bx','MarkerSize',10,'LineWidth',3);
 end
 
-% plotting receivers
-for i = 1:length(R)
-    rcv = R(i).location;
-    plot3(rcv(1), rcv(2), rcv(3),'k.','MarkerSize',10,'LineWidth',3);
-end
-
 grid on
 xlim([-6 10])
 ylim([-6 10])
 zlim([-6 10])
 axis square
+
+%%
+% save room configuration
+json_filename = [pwd '/test.json'];
+save_room_config(walls, S, json_filename);
+
+% load the same room configuration (for testing)
+[S2, walls2] = load_room_config(json_filename);

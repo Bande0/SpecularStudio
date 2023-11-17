@@ -30,6 +30,12 @@ classdef RectangularSurface
             obj.idx = idx;
             obj.points = [Point_1; Point_2; Point_3; Point_4];
             
+            % if any of the points are NaN, then this is a dummy object and
+            % no further calculations are necessary
+            if any(isnan(obj.points))
+                return
+            end
+            
             % initialize and verify surfaces
             obj = obj.init();
             % We run this extra check now, since in this simple simulator, intersection
