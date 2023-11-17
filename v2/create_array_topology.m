@@ -4,10 +4,27 @@ topology = params.topology; % topology type - archimedean | dougherty | multi
 N = params.N;               % no. mics
 r0 = params.r0;             % minimum radius
 rmax = params.rmax;         % maximum radius
-plane = params.plane;
-x_offset = params.x_offset;
-y_offset = params.y_offset;
-z_offset = params.z_offset;
+
+if ~isfield(params, 'plane')
+    plane = 'xy';
+else
+    plane = params.plane;
+end
+if ~isfield(params, 'x_offset')
+    x_offset = 0;
+else
+    x_offset = params.x_offset;
+end
+if ~isfield(params, 'y_offset')
+    y_offset = 0;
+else
+    y_offset = params.y_offset;
+end
+if ~isfield(params, 'z_offset')
+    z_offset = 0;
+else
+    z_offset = params.z_offset;
+end
 
 % "squish" the resulting topology into a containing rectangle
 squish_params = params.squish_params;
@@ -76,8 +93,6 @@ elseif strcmp(topology, 'multi')
         for n = 1:N_m
             idx = idx + 1;   
 
-%             l_n = (n-1)/(N_m-1)*l_max;
-%             l_n = n/N_m*l_max;
             l_n = (n-1)/(N_m)*l_max;
             
             theta = 1/cot(v) * log(1 + (cot(v)*l_n / r0*sqrt(1 + cot(v)^2)));

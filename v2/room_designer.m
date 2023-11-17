@@ -103,15 +103,11 @@ end
 % plotting receivers
 for i = 1:length(R)
     rcv = R(i).location;
-    plot3(rcv(1), rcv(2), rcv(3),'kx','MarkerSize',10,'LineWidth',3);
+    plot3(rcv(1), rcv(2), rcv(3),'k.','MarkerSize',10,'LineWidth',3);
 end
-
-
-
 
 grid on
 xlim([-6 10])
 ylim([-6 10])
 zlim([-6 10])
 axis square
-
