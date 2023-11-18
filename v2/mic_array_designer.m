@@ -1,13 +1,18 @@
 clear all
 close all
 clc
+addpath([pwd '/utility']);
+addpath([pwd '/jsonlab']);
+
+% ----- JSON filename for saving array  ----- %
+filename = 'mic_array.json';
 
 % --------------- Mic array topology --------------- %
 N = 16;                % num. mics
 topology = 'multi';    % 'archimedean' | 'dougherty' | 'multi'
 r0 = 0.2;              % minimum radius
 rmax = 1.0;            % maximum radius
-plane = 'xz';          % 'xy' | 'xz' - array orientation (X-Y or the X-Z plane)
+plane = 'xy';          % 'xy' | 'xz' - array orientation (X-Y or the X-Z plane)
 
 % height and width of the rectangle that the topology should be "squished"
 % into
@@ -52,7 +57,7 @@ R = create_array_topology(array_params);
 plot_mic_array_topology(R, array_params);
 
 % ---- saving to JSON
-filename = [pwd '/mic_array.json'];
-save_mic_array_config(R, array_params, filename);
+save_mic_array_config(R, array_params, [pwd '/' filename]);
 
-R2 = load_mic_array_config(filename);
+% % load the same mic array (for testing)
+% R2 = load_mic_array_config(filename);

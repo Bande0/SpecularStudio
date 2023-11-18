@@ -84,13 +84,6 @@ D = fft(d, 2*N);
 Sxd = mean(conj(X) .* D, 2);
 Sxx = mean(conj(X) .* X, 2);
 
-% semilogx(F, 20*log10(abs(Pxx)));
-% hold on
-% semilogx(F, 20*log10(abs(Pdd)));
-
-% semilogx(20*log10(abs(Sxd ./ Sxx)));
-% hold on
-
 % compute impulse response
 ir = ifft(Sxd ./ Sxx);
 ir = ir(1:ir_len); 

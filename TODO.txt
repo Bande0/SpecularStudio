@@ -1,17 +1,8 @@
 - Create “master” class containing walls, sources, receivers + all functions
-- create main.m
-- include room + reflection paths plotting into main as well
+- include reflection paths plotting into main as well
 - plotting of TFs (not just IFs)
 
-- main should:
-	- import room config (including sources)
-	- import array config
-	- define source signals (crash if no. signals is not the same as no. sources in config)
-	- apply offset and rotation to array config
-	- plot full setup (room, sources, array)
-	- define sources manually
-- test main with imported sources as well as manually defined sources
-- test main with manually defined room config in file (including room with no sources in file but sources defined in code)
+- mic topology plotter should detect if the array is 3D or 2D (does it have depth in all 3 directions) and if 3D, plot in 3D otherwise stay like as is
 
 - file export of IRs (format?)
 

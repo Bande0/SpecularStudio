@@ -27,7 +27,7 @@ sig_params.type = 'file';
 % sig_params.file_path = 'C:\git\SpecularStudio\audio_files\IEEEMix2_16k.wav';
 sig_params.file_path = fullfile(pwd, '../../audio_files/piano_44100Hz.wav');
 sig_params.gain_dB = -12.0;
-x = generate_source_signal(sig_params, len_s, fs);
+x = generate_source_signals(sig_params, len_s, fs);
 
 
 % --------------- Reflective surfaces --------------- %
