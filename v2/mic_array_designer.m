@@ -53,11 +53,11 @@ array_params.plane = plane;
 
 R = create_array_topology(array_params);
 
-% ---- plotting
+% % ---- plotting
 plot_mic_array_topology(R, array_params);
-
-% ---- saving to JSON
+% 
+% % ---- saving to JSON
 save_mic_array_config(R, array_params, [pwd '/' filename]);
-
-% % load the same mic array (for testing)
-% R2 = load_mic_array_config(filename);
+% 
+% % % load the same mic array (for testing)
+% % R2 = load_mic_array_config(filename);

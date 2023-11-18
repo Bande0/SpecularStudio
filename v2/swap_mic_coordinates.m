@@ -1,4 +1,6 @@
 function R = swap_mic_coordinates(R, swap_from, swap_to)
+% Applies a simple transformation between the XY and XZ planes by simply
+% swapping the Y and Z coordinates
 
     if strcmp(swap_from, 'y')
         from_idx = 2;

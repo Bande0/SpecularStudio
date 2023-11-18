@@ -1,6 +1,6 @@
 function img_list_valid = audibility_check(img_list, walls, R)
 % Takes a receiver and a list of image sources and checks whether the
-% reflection path is valid
+% reflection path is "valid" seen from the receiver's point of view.
 % Also it constructs a set of segments corresponding to the actual 
 % reflection path travelled by the sound (for plotting)
 
