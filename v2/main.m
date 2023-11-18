@@ -4,25 +4,25 @@ clear all
 addpath([pwd '/..']);
 
 % -------- Maximum reflection order to simulate -------- %
-max_order = 4;
+max_order = 3;
 
 % --------------- Load Room Configuration --------------- %
 room_json = 'room.json';
 [S, walls] = load_room_config([pwd '/' room_json]);
 
-S = [PointSource([3, 5, 2]),...
-     PointSource([3, 3, 2]),...
-    ];
+% S = [PointSource([3, 5, 2]),...
+%      PointSource([3, 3, 2]),...
+%     ];
 
 % --------------- Load Mic Array --------------- %
-% mic_json = 'mic_array.json';
-% R = load_mic_array_config(mic_json);
-% 
-% R = swap_mic_coordinates(R, 'y', 'z');
-% R = add_offsets_to_mic_array(R, 3, 1, 2);
+mic_json = 'mic_array.json';
+R = load_mic_array_config(mic_json);
 
-R = [Receiver([4, 2, 2]),...
-     Receiver([2, 2, 2])];
+R = swap_mic_coordinates(R, 'y', 'z');
+R = add_offsets_to_mic_array(R, 3, 1, 2);
+
+% R = [Receiver([4, 2, 2]),...
+%      Receiver([2, 2, 2])];
 
 % --------------- Plot room setup --------------- %
 plot_room(walls, S, R);
@@ -40,11 +40,11 @@ sig_params(i_sig).file_path = fullfile(pwd, '../audio_files/piano_44100Hz.wav');
 sig_params(i_sig).gain_dB = -6.0;
 i_sig = i_sig + 1;
 
-sig_params(i_sig).type = 'file';
-sig_params(i_sig).name = 'IEEEMix2';
-sig_params(i_sig).file_path = fullfile(pwd, '../audio_files/IEEEMix2_16k.wav');
-sig_params(i_sig).gain_dB = -6.0;
-i_sig = i_sig + 1;
+% sig_params(i_sig).type = 'file';
+% sig_params(i_sig).name = 'IEEEMix2';
+% sig_params(i_sig).file_path = fullfile(pwd, '../audio_files/IEEEMix2_16k.wav');
+% sig_params(i_sig).gain_dB = -6.0;
+% i_sig = i_sig + 1;
 
 x = generate_source_signals(sig_params, len_s, fs);
 
@@ -76,8 +76,9 @@ for i_src = 1:length(S)
         % map image source signals as seen by the microphone and estimate
         % impulse response
         disp(['Mapping signals onto mic ' num2str(i_rcv) '/' num2str(length(R)) '...']);
-        [y{i_src, i_rcv}, ir{i_src, i_rcv}] = map_signals_to_receiver(R(i_rcv), img_lists{i_rcv}, c, fs);   
-        
+        [y{i_src, i_rcv}, ir{i_src, i_rcv}] = map_signals_to_receiver(R(i_rcv), img_lists{i_rcv}, c, fs);           
+        % plot all max.order reflection paths for current source and
+        % receiver
         plot_reflection_paths(walls, img_lists, i_src, i_rcv, max_order);
     end
     toc;
