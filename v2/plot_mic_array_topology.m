@@ -1,4 +1,16 @@
-function plot_mic_array_topology(R, array_params)
+function plot_mic_array_topology(R, varargin)
+    
+    default_params.topology = 'custom';
+    default_params.squish_params.width = 1;
+    default_params.squish_params.height = 1;
+    default_params.squish_params.do_squish = 0;
+    default_params.plane = 'xy';
+   
+    if isempty(varargin)
+        array_params = default_params;
+    else
+        array_params = varargin{1};
+    end
 
     % ---- construct title string
     try
@@ -21,6 +33,8 @@ function plot_mic_array_topology(R, array_params)
                             'r0: ', num2str(array_params.r0), char(10),...
                             'r_max: ', num2str(array_params.rmax), char(10),...
                             'v: ', num2str(array_params.multi.v)];
+        elseif strcmp(array_params.topology, 'custom')
+           title_string = ['Custom topology']; 
         else 
            error('Unrecognized topology: "%s"', array_params.topology); 
         end
@@ -42,6 +56,7 @@ function plot_mic_array_topology(R, array_params)
     if (xrange > 0) && (yrange > 0) && (zrange > 0)
         all_max = max(max(rm));
         all_min = min(min(rm));
+        max_range = max(max(rm)) - min(min(rm));
         figure()
         for i = 1:length(R)
             rcv = R(i).location;
@@ -49,9 +64,9 @@ function plot_mic_array_topology(R, array_params)
             hold on;
         end
         grid on
-        xlim([all_min all_max])
-        ylim([all_min all_max])
-        zlim([all_min all_max])
+        xlim([all_min-max_range*0.2 all_max+max_range*0.2]);
+        ylim([all_min-max_range*0.2 all_max+max_range*0.2]);
+        zlim([all_min-max_range*0.2 all_max+max_range*0.2]);
         axis square 
     % otherwise, do a 2D-plot
     else
@@ -86,5 +101,6 @@ function plot_mic_array_topology(R, array_params)
         title(title_string, 'Interpreter', 'None');
         hold on
         axis square;
+        grid on;
     end
 end
