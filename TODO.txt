@@ -3,14 +3,16 @@
 - include room + reflection paths plotting into main as well
 - plotting of TFs (not just IFs)
 
-- load configs from json (?) files instead of typing in main
+- main should:
+	- import room config (including sources)
+	- import array config
+	- define source signals (crash if no. signals is not the same as no. sources in config)
+	- apply offset and rotation to array config
+	- plot full setup (room, sources, array)
+	- define sources manually
+- test main with imported sources as well as manually defined sources
+- test main with manually defined room config in file (including room with no sources in file but sources defined in code)
 
-- Room designer: should export room in config format which the main can load
-- Mic topology designer: should import config from room designer. Should plot mic array topology separately (with “squish rectangle”) and also “in context” in the room
-- Sources designer? defining locations AND SIGNALS of sources...
----> where should these three come together? A "master designer"? Or what
-
-- proper (?) file export of resulting mic signals
 - file export of IRs (format?)
 
 - Make a plotter class...?
