@@ -47,6 +47,7 @@ if strcmp(topology, 'archimedean')
         else
             error('ERROR! Unsupported plane: %s', plane)
         end
+        mic.idx = n;
         R = [R mic];
     end
 % --------- Dougherty log-spiral     
@@ -69,6 +70,7 @@ elseif strcmp(topology, 'dougherty')
         else
             error('ERROR! Unsupported plane: %s', plane)
         end
+        mic.idx = n;
         R = [R mic];
     end
 % --------- Multi Dougherty log-spiral
@@ -109,6 +111,7 @@ elseif strcmp(topology, 'multi')
             else
                 error('ERROR! Unsupported plane: %s', plane)
             end
+            mic.idx = (m-1)*N_a + n;
             R = [R mic];
         end
     end

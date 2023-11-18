@@ -5,6 +5,7 @@ classdef Receiver
 
     properties
        location
+       idx
     end
     
     methods

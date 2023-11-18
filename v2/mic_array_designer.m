@@ -1,3 +1,6 @@
+clear all
+close all
+clc
 
 % --------------- Mic array topology --------------- %
 N = 16;                % num. mics
@@ -47,3 +50,9 @@ R = create_array_topology(array_params);
 
 % ---- plotting
 plot_mic_array_topology(R, array_params);
+
+% ---- saving to JSON
+filename = [pwd '/mic_array.json'];
+save_mic_array_config(R, array_params, filename);
+
+R2 = load_mic_array_config(filename);

@@ -104,7 +104,7 @@ axis square
 
 %%
 % save room configuration
-json_filename = [pwd '/test.json'];
+json_filename = [pwd '/room.json'];
 save_room_config(walls, S, json_filename);
 
 % load the same room configuration (for testing)
