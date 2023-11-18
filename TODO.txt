@@ -1,12 +1,10 @@
 - Create “master” class containing walls, sources, receivers + all functions
-- include reflection paths plotting into main as well
 - plotting of TFs (not just IFs)
-
-- mic topology plotter should detect if the array is 3D or 2D (does it have depth in all 3 directions) and if 3D, plot in 3D otherwise stay like as is
 
 - file export of IRs (format?)
 
-- Make a plotter class...?
+- Make a plotter class
+	- contains all the plotter functions and a common colours list for all
 
 - "Interleaving" generation of all image sources & audibility checking:
 	- don't generate ALL image sources and then audibility check for each receiver individually
