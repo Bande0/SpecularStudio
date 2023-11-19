@@ -1,6 +1,11 @@
 function [x, y, ir] = run_simulation(obj)
 %TODO
 
+    % --------------- Plot room setup --------------- %
+    if obj.do_plot_room
+        plot_room(obj.walls, obj.S, obj.R);
+    end
+
     x = obj.generate_source_signals();
 
     if size(x, 1) ~= length(obj.S)

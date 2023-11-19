@@ -12,6 +12,7 @@ classdef SpecularStudio
        max_order     % maximum reflection order to simulate
        % process flags
        do_plot_IRs
+       do_plot_room
        do_plot_reflection_paths
        do_export_audio
     end
@@ -30,6 +31,7 @@ classdef SpecularStudio
            % ----------- various process flags --------- %
            obj.do_plot_IRs = params.do_plot_IRs;
            obj.do_plot_reflection_paths = params.do_plot_reflection_paths;
+           obj.do_plot_room = params.do_plot_room;
            obj.do_export_audio = params.do_export_audio;
            
            % ------ geometry (room, sources, receivers) ----- %

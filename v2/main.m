@@ -24,9 +24,6 @@ R = add_offsets_to_mic_array(R, 3, 1, 2);
 % R = [Receiver([4, 2, 2]),...
 %      Receiver([2, 2, 2])];
 
-% --------------- Plot room setup --------------- %
-plot_room(walls, S, R);
-
 % ----------- Generate source signals ----------- %
 fs = 32000;     % sampling rate
 c = 343;        % speed of sound
@@ -46,14 +43,15 @@ i_sig = i_sig + 1;
 % sig_params(i_sig).gain_dB = -6.0;
 % i_sig = i_sig + 1;
 
-
+% ----------- Run simulation with SpecularStudio ----------- %
 spec_studio_params = struct();
 spec_studio_params.max_order = max_order;
 spec_studio_params.fs = fs;
 spec_studio_params.c = c;
 spec_studio_params.len_s = len_s;
+spec_studio_params.do_plot_room = 1;
 spec_studio_params.do_plot_IRs = 1;
-spec_studio_params.do_plot_reflection_paths = 1;
+spec_studio_params.do_plot_reflection_paths = 1;;
 spec_studio_params.do_export_audio = 1;
 
 SpecStudio = SpecularStudio(S, R, walls, sig_params, spec_studio_params);
