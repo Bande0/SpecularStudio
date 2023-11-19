@@ -41,7 +41,16 @@ classdef SpecularStudio
            obj.sig_params = sig_params;         
         end   
         
+        % main simulation
         [x, y, ir] = run_simulation(obj);
+        
+        sig = generate_source_signals(obj);
+        cnt = count_all_image_sources(obj);
+        img_list = generate_image_sources(obj, P, max_order);
+        img_list_valid = audibility_check(obj, img_list, i_rcv);
+        [y, ir] = map_signals_to_receiver(obj, i_rcv, img_src_list);
+        
+        
         
         
     end

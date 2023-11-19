@@ -1,7 +1,7 @@
 function [x, y, ir] = run_simulation(obj)
 %TODO
 
-    x = generate_source_signals(obj.sig_params, obj.len_s, obj.fs);
+    x = obj.generate_source_signals();
 
     if size(x, 1) ~= length(obj.S)
         error('ERROR: Number or source signals must match number of sources!');
@@ -14,15 +14,15 @@ function [x, y, ir] = run_simulation(obj)
         % generate all possible image sources for a point source
         tic;
 
-        no_all_img_src = count_all_image_sources(length(obj.walls), obj.max_order);
+        no_all_img_src = obj.count_all_image_sources();
         disp(['Generating ' num2str(no_all_img_src) ' image sources for point source no.' num2str(i_src) '...']);
-        img_list_all = generate_image_sources(obj.S(i_src), obj.walls, obj.max_order);
+        img_list_all = obj.generate_image_sources(obj.S(i_src), obj.max_order);
 
         for i_rcv = 1:length(obj.R)
             % run an "audibility check" on all image sources and discard the ones that
             % are not reachable through a valid path from the receiver
             disp(['Running audibility check for mic ' num2str(i_rcv) '/' num2str(length(obj.R)) '...']);
-            img_lists{i_src, i_rcv} = audibility_check(img_list_all, obj.walls, obj.R(i_rcv));
+            img_lists{i_src, i_rcv} = obj.audibility_check(img_list_all, i_rcv);
             % Assign emitted signals to each source (true source + image source) by
             % following the reflection path and applying the absorption from each wall
             % encountered along the way to the emitted signal
@@ -31,7 +31,7 @@ function [x, y, ir] = run_simulation(obj)
             % map image source signals as seen by the microphone and estimate
             % impulse response
             disp(['Mapping signals onto mic ' num2str(i_rcv) '/' num2str(length(obj.R)) '...']);
-            [y{i_src, i_rcv}, ir{i_src, i_rcv}] = map_signals_to_receiver(obj.R(i_rcv), img_lists{i_rcv}, obj.c, obj.fs);           
+            [y{i_src, i_rcv}, ir{i_src, i_rcv}] = obj.map_signals_to_receiver(i_rcv, img_lists{i_rcv});
             % plot all max.order reflection paths for current source and
             % receiver
             if obj.do_plot_reflection_paths

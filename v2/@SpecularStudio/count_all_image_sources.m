@@ -1,6 +1,9 @@
-function cnt = count_all_image_sources(no_walls, max_order)
+function cnt = count_all_image_sources(obj)
 % counts the theoretical number of all possible (valid and invalid) image
 % sources for a given number of walls and maximum reflection order
+
+    no_walls = length(obj.walls);
+    max_order = obj.max_order;
         
     % 0'th order source (true source) == 1
     % 1st order sources == no_walls

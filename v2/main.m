@@ -4,7 +4,7 @@ clear all
 addpath([pwd '/..']);
 
 % -------- Maximum reflection order to simulate -------- %
-max_order = 3;
+max_order = 1;
 
 % --------------- Load Room Configuration --------------- %
 room_json = 'room.json';

@@ -1,4 +1,4 @@
-function img_list = generate_image_sources(P, walls, max_order)
+function img_list = generate_image_sources(obj, P, max_order)
 % Recursively generates image sources of a source P for the room geometry 
 % defined by the list of RectangularSurface objects in the "walls" argument. 
 %
@@ -28,7 +28,8 @@ function img_list = generate_image_sources(P, walls, max_order)
 %     img_list: struct array containing a list of image sources in the same
 %               format as the input source
         
- 
+    walls = obj.walls;
+
     % initialize returned list
     img_list = [];
     
@@ -62,7 +63,7 @@ function img_list = generate_image_sources(P, walls, max_order)
             img = img.set_order(length(path));
             % recursively call the function for the image source and
             % decrement the order counter            
-            list = generate_image_sources(img, walls, max_order-1);
+            list = obj.generate_image_sources(img, max_order-1);
             % append the image source and the list returned from the
             % recursion to the image list
             img_list = [img_list; img];

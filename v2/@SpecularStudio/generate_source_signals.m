@@ -1,4 +1,4 @@
-function sig = generate_source_signals(sig_params, len_s, fs)
+function sig = generate_source_signals(obj)
 % Generates source signals based on the provided parameters
 %
 %   Input arguments:
@@ -10,6 +10,10 @@ function sig = generate_source_signals(sig_params, len_s, fs)
 %   Output arguments:
 %
 %   signal: emitted signal
+
+    sig_params = obj.sig_params;
+    len_s = obj.len_s;
+    fs = obj.fs;
 
     no_samples = len_s * fs;
     sig = zeros(length(sig_params), no_samples);

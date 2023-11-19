@@ -1,4 +1,4 @@
-function [y, ir] = map_signals_to_receiver(rm, img_src_list, c, fs)
+function [y, ir] = map_signals_to_receiver(obj, i_rcv, img_src_list)
 % Simulates the signals seen by a microphone array in a simple soundfield
 % including a point source and specular reflections modelled as image
 % sources
@@ -24,7 +24,9 @@ function [y, ir] = map_signals_to_receiver(rm, img_src_list, c, fs)
 %   y:  microphone signal
 %   ir: Impulse response between mic and source
 
-r = rm.location';
+c = obj.c;
+fs = obj.fs;
+r = obj.R(i_rcv).location';
 
 if ~all(size(r) == [3 1])
    error('ERROR! Microphone geometry has wrong format - it must be an array of size 3 x 1'); 
