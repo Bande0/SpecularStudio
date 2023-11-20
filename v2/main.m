@@ -1,7 +1,8 @@
 % close all
 clc
 clear all
-addpath([pwd '/..']);
+addpath([pwd '/jsonlab']);
+addpath([pwd '/utility']);
 
 % -------- Maximum reflection order to simulate -------- %
 max_order = 1;
@@ -51,7 +52,7 @@ spec_studio_params.c = c;
 spec_studio_params.len_s = len_s;
 spec_studio_params.do_plot_room = 1;
 spec_studio_params.do_plot_IRs = 1;
-spec_studio_params.do_plot_reflection_paths = 1;;
+spec_studio_params.do_plot_reflection_paths = 1;
 spec_studio_params.do_export_audio = 1;
 
 SpecStudio = SpecularStudio(S, R, walls, sig_params, spec_studio_params);
