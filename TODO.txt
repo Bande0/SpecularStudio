@@ -6,8 +6,12 @@
 - Make a plotter class
 	- contains all the plotter functions and a common colours list for all
 
+- When done, get rid of v1 and test again
+
 - "Interleaving" generation of all image sources & audibility checking:
 	- don't generate ALL image sources and then audibility check for each receiver individually
 	- instead, when generating an image source, already run the audibility check for all receivers
 
 - Add more advanced absorption modelling (using filtfilt)?
+
+- When beamforming/EC evaluation part is done, try the free Treble tool trial and inspect the differences
