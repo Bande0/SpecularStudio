@@ -43,18 +43,29 @@ classdef SpecularStudio
            obj.sig_params = sig_params;         
         end   
         
-        % main simulation
+        % main simulation function
         [x, y, ir] = run_simulation(obj);
-        
+        % generate/load signals emitted by point sources
         sig = generate_source_signals(obj);
+        % calculate theoretical number of all image sources for a given
+        % geometry and maximum reflection order
         cnt = count_all_image_sources(obj);
+        % generate all ("valid" as well as "invalid") image sources for a
+        % point source in a given geometry and for given maximum reflection
+        % order
         img_list = generate_image_sources(obj, P, max_order);
+        % discard invalid image sources by backtracking reflection paths
         img_list_valid = audibility_check(obj, img_list, i_rcv);
-        [y, ir] = map_signals_to_receiver(obj, i_rcv, img_src_list);
-        
-        
-        
-        
+        % map source ("true" source and image sources) to a microphone
+        [y, ir] = map_signals_to_receiver(obj, i_rcv, img_src_list);               
+    end
+    
+    methods(Static)
+        y = delay_sig(x, delay_sec, fs);
+        [R, params] = create_array_topology(params);
+        R = add_offsets_to_mic_array(R, x_offset, y_offset, z_offset);
+        R = swap_mic_coordinates(R, swap_from, swap_to);
+        img_list = assign_signals_to_image_sources(img_list, x);
     end
     
 end

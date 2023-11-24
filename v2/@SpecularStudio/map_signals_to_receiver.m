@@ -52,7 +52,7 @@ N = ir_len * 2;  % block size
 y = zeros(1, no_samples);
 for j = 1:no_img_src
     % y = 1/r * x(t - r/c) 
-    img_sig = 1/r_src(j) * delay_sig(img_src_list(j).emitted_signal, r_src(j)/c, fs);
+    img_sig = 1/r_src(j) * SpecularStudio.delay_sig(img_src_list(j).emitted_signal, r_src(j)/c, fs);
     y = y + img_sig;      
 end
 

@@ -1,8 +1,9 @@
 clear all
 close all
 clc
-addpath([pwd '/utility']);
-addpath([pwd '/jsonlab']);
+addpath(fullfile(pwd, 'utility'));
+addpath(fullfile(pwd, 'jsonlab'));
+addpath(fullfile(pwd, 'plotting'));
 
 % ----- JSON filename for saving array  ----- %
 filename = 'mic_array.json';
@@ -51,13 +52,10 @@ array_params.squish_params.height = rect_h;
 array_params.squish_params.width = rect_w;
 array_params.plane = plane;
 
-R = create_array_topology(array_params);
+R = SpecularStudio.create_array_topology(array_params);
 
 % % ---- plotting
 plot_mic_array_topology(R, array_params);
-% 
+
 % % ---- saving to JSON
-save_mic_array_config(R, array_params, [pwd '/' filename]);
-% 
-% % % load the same mic array (for testing)
-% % R2 = load_mic_array_config(filename);
+save_mic_array_config(R, array_params, fullfile(pwd, 'geometry', 'mic_array', filename));

@@ -6,21 +6,22 @@ function [x, y, ir] = run_simulation(obj)
         plot_room(obj.walls, obj.S, obj.R);
     end
 
+    % generate/load signals emitted by point source(s)
     x = obj.generate_source_signals();
-
     if size(x, 1) ~= length(obj.S)
         error('ERROR: Number or source signals must match number of sources!');
     end
 
     img_lists = {};
     y = {};
-    ir = {};
-    for i_src = 1:length(obj.S)
-        % generate all possible image sources for a point source
+    ir = {};    
+    % loop through all point sources and generate image sources
+    for i_src = 1:length(obj.S)        
         tic;
 
         no_all_img_src = obj.count_all_image_sources();
         disp(['Generating ' num2str(no_all_img_src) ' image sources for point source no.' num2str(i_src) '...']);
+        % generate all possible image sources ("valid and "invalid") for a point source
         img_list_all = obj.generate_image_sources(obj.S(i_src), obj.max_order);
 
         for i_rcv = 1:length(obj.R)
@@ -32,7 +33,7 @@ function [x, y, ir] = run_simulation(obj)
             % following the reflection path and applying the absorption from each wall
             % encountered along the way to the emitted signal
             disp(['Assigning signals to image sources for mic ' num2str(i_rcv) '/' num2str(length(obj.R)) '...']);
-            img_lists{i_src, i_rcv} = assign_signals_to_image_sources(img_lists{i_src, i_rcv}, x(i_src, :));
+            img_lists{i_src, i_rcv} = SpecularStudio.assign_signals_to_image_sources(img_lists{i_src, i_rcv}, x(i_src, :));
             % map image source signals as seen by the microphone and estimate
             % impulse response
             disp(['Mapping signals onto mic ' num2str(i_rcv) '/' num2str(length(obj.R)) '...']);

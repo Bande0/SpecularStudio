@@ -1,8 +1,9 @@
 close all
 clc
 clear all
-addpath([pwd '/utility']);
-addpath([pwd '/jsonlab']);
+addpath(fullfile(pwd, 'utility'));
+addpath(fullfile(pwd, 'jsonlab'));
+addpath(fullfile(pwd, 'plotting'));
 
 % ----- JSON filename for saving room config  ----- %
 filename = 'room.json';
@@ -69,7 +70,4 @@ plot_room(walls, S);
 
 %%
 % save room configuration
-save_room_config(walls, S, [pwd '/' filename]);
-
-% % load the same room configuration (for testing)
-% [S2, walls2] = load_room_config([pwd '/' filename]);
+save_room_config(walls, S, fullfile(pwd, 'geometry', 'room', filename));
