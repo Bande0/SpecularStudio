@@ -1,3 +1,5 @@
+- remove v1 
+
 - Create “master” class containing walls, sources, receivers + all functions
 - plotting of TFs (not just IFs)
 
