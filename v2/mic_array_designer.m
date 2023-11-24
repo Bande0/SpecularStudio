@@ -9,7 +9,7 @@ addpath(fullfile(pwd, 'plotting'));
 filename = 'mic_array.json';
 
 % --------------- Mic array topology --------------- %
-N = 16;                % num. mics
+N = 16;                % num. mics in array
 topology = 'multi';    % 'archimedean' | 'dougherty' | 'multi'
 r0 = 0.2;              % minimum radius
 rmax = 1.0;            % maximum radius

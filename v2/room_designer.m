@@ -9,6 +9,18 @@ addpath(fullfile(pwd, 'plotting'));
 filename = 'room.json';
 
 % --------------- Reflective surfaces --------------- %
+% Here you can defined individual reflective surfaces, defined by their
+% four corner points
+% Each surface must fulfill the following requirements:
+% - The four points must be co-planar
+% - The surface defined by the four points must be a rectangle (only right
+% angles)
+% - The four points defining the rectangle must be in the "correct order"
+% (i.e they must either be in a clockwise or counter-clockwise order)
+% - The surface must be parallel to at least one of the three coordinate
+% axes
+% ---> if any of the above is not met, an error will be thrown
+
 i_wall = 1;
 walls(i_wall) = RectangularSurface(i_wall,...
                                    [0,0,0],...
@@ -60,9 +72,9 @@ walls(i_wall) = RectangularSurface(i_wall,...
                                    1.0);
 i_wall = i_wall + 1; 
                                 
-                    
-% Define true pointsource(s)      
+% --------------- Define true pointsource(s) --------------- %                    
 S = [PointSource([3, 5, 2]),...
+    % PointSource([3, 4, 2]),...
     ];
 
 %%  plotting
