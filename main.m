@@ -1,4 +1,4 @@
-% close all
+close all
 clc
 clear all
 addpath(fullfile(pwd, 'jsonlab'));
@@ -39,13 +39,13 @@ i_sig = 1;
 sig_params = struct();
 sig_params(i_sig).type = 'file';
 sig_params(i_sig).name = 'piano';
-sig_params(i_sig).file_path = fullfile(pwd, '../audio_files/piano_44100Hz.wav');
+sig_params(i_sig).file_path = fullfile(pwd, 'audio_files/piano_44100Hz.wav');
 sig_params(i_sig).gain_dB = -6.0;
 i_sig = i_sig + 1;
 
 % sig_params(i_sig).type = 'file';
 % sig_params(i_sig).name = 'IEEEMix2';
-% sig_params(i_sig).file_path = fullfile(pwd, '../audio_files/IEEEMix2_16k.wav');
+% sig_params(i_sig).file_path = fullfile(pwd, 'audio_files/IEEEMix2_16k.wav');
 % sig_params(i_sig).gain_dB = -6.0;
 % i_sig = i_sig + 1;
 

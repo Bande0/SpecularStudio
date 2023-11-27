@@ -1,16 +1,11 @@
-- remove v1 
-
-- Create “master” class containing walls, sources, receivers + all functions
 - plotting of TFs (not just IFs)
 
 - file export of IRs (format?)
 
-- Make a plotter class
+- Make a plotter class?
 	- contains all the plotter functions and a common colours list for all
 
-- When done, get rid of v1 and test again
-
-- "Interleaving" generation of all image sources & audibility checking:
+- "Interleaving" generation of all image sources & audibility checking (to avoid memory issues)s:
 	- don't generate ALL image sources and then audibility check for each receiver individually
 	- instead, when generating an image source, already run the audibility check for all receivers
 

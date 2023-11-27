@@ -37,7 +37,7 @@ function [x, y, ir] = run_simulation(obj)
             % map image source signals as seen by the microphone and estimate
             % impulse response
             disp(['Mapping signals onto mic ' num2str(i_rcv) '/' num2str(length(obj.R)) '...']);
-            [y{i_src, i_rcv}, ir{i_src, i_rcv}] = obj.map_signals_to_receiver(i_rcv, img_lists{i_rcv});
+            [y{i_src, i_rcv}, ir{i_src, i_rcv}] = obj.map_signals_to_receiver(i_rcv, img_lists{i_src, i_rcv});
             % plot all max.order reflection paths for current source and
             % receiver
             if obj.do_plot_reflection_paths
@@ -49,17 +49,6 @@ function [x, y, ir] = run_simulation(obj)
         %% plot IRs
         if obj.do_plot_IRs
             plot_irs(ir, i_src);
-%             figure()
-%             cols = floor(sqrt(length(obj.R)));
-%             rows = length(obj.R) / cols;
-%             cnt = 1;
-%             for i = 1:rows
-%                 for j = 1:cols
-%                     subplot(rows, cols, cnt)
-%                     plot(ir{i_src, cnt});
-%                     cnt = cnt + 1;
-%                 end
-%             end
         end
 
         %% export audio
@@ -68,12 +57,12 @@ function [x, y, ir] = run_simulation(obj)
             for i = 1:length(obj.R)
                 Y_out = [Y_out; y{i_src, i}];
             end
-            if ~exist(fullfile(pwd, '../' , 'output_files'), 'dir')
-                mkdir(fullfile(pwd, '../' , 'output_files'));
+            if ~exist(fullfile(pwd, 'output_files'), 'dir')
+                mkdir(fullfile(pwd, 'output_files'));
             end
-            audiowrite(fullfile(pwd, ['../output_files/' obj.sig_params(i_src).name '_wet_order_' num2str(obj.max_order) '_mics_' num2str(length(obj.R)) '.wav']), Y_out', obj.fs);   
-            audiowrite(fullfile(pwd, ['../output_files/' obj.sig_params(i_src).name '_dry.wav']), x(i_src, :), obj.fs);
-            disp([char(10) 'Output files exported to: ' char(10) fullfile(pwd, '../' , 'output_files')]);
+            audiowrite(fullfile(pwd, ['output_files/' obj.sig_params(i_src).name '_wet_order_' num2str(obj.max_order) '_mics_' num2str(length(obj.R)) '.wav']), Y_out', obj.fs);   
+            audiowrite(fullfile(pwd, ['output_files/' obj.sig_params(i_src).name '_dry.wav']), x(i_src, :), obj.fs);
+            disp([char(10) 'Output files exported to: ' char(10) fullfile(pwd, 'output_files')]);
         end
 
     %     %% playback

@@ -18,9 +18,11 @@ function plot_room(walls, S, varargin)
     figure()
 
     % plotting walls
+    wp_all = [];
     for w_idx = 1:length(walls)
         wp = walls(w_idx).points;
         n = walls(w_idx).normal;
+        wp_all = [wp_all; wp]; % storing all wall points in an array for calculating axis limits later
 
         fill3(wp(:,1), wp(:,2), wp(:,3), 'g', 'FaceAlpha', 0.5);  % surface
         hold on    
@@ -46,13 +48,17 @@ function plot_room(walls, S, varargin)
         rcv = R(i).location;
         plot3(rcv(1), rcv(2), rcv(3),'k.','MarkerSize',10);
     end
-
-    % FIXME hardcoded axis limits
+    
+    % calculating plot axis limits
+    max_val = max(max(wp_all));
+    min_val = min(min(wp_all));
+    range = max_val - min_val;
+    plot_max = ceil(max_val + range*0.2);
+    plot_min = floor(min_val - range*0.2);    
+    
     grid on
-    xlim([-6 10])
-    ylim([-6 10])
-    zlim([-6 10])
+    xlim([plot_min plot_max])
+    ylim([plot_min plot_max])
+    zlim([plot_min plot_max])
     axis square
-
 end
-
