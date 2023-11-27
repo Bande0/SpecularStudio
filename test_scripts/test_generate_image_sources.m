@@ -33,8 +33,24 @@ i_wall = i_wall + 1;
 % Define a source to be mirrored      
 S = PointSource([6, -1, 2]);
 
+
+
+% Instantiate a SpecularStudio object
+spec_studio_params = struct();
+spec_studio_params.max_order = 1;
+% dummy parameters - not used in this test
+R = [];
+spec_studio_params.fs = NaN;  
+spec_studio_params.c = NaN;
+spec_studio_params.len_s = NaN;
+% empty struct here - there are no signals applied in this test
+sig_params = struct(); 
+
+% Instantiate SpecularStudio
+SpecStudio = SpecularStudio(S, R, walls, sig_params, spec_studio_params);
+
 % generate all image sources for a point source
-src_list = generate_image_sources(S, walls, 3);
+src_list = SpecStudio.generate_image_sources(SpecStudio.S, SpecStudio.max_order);
 
 %%  plotting
 figure()

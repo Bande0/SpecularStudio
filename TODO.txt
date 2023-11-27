@@ -1,3 +1,5 @@
+- bug(?) - how can it be that in some IRs, it's not the main reflection that has the highest amplitude?? (reproduce: 1st order reflection, mic 1 and mic 9)
+
 - plotting of TFs (not just IFs)
 
 - file export of IRs (format?)

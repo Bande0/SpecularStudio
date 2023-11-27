@@ -14,6 +14,7 @@ function plot_irs(ir, i_src)
             subplot(rows, cols, cnt)
             plot(ir{i_src, cnt});
             ylim([plt_min plt_max]);
+            xlim([0 length(ir{i_src, cnt})])
             title(sprintf('Src: %d, mic: %d', i_src, cnt));
             cnt = cnt + 1;
         end

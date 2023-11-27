@@ -29,10 +29,26 @@ classdef SpecularStudio
            obj.max_order = params.max_order;   
            
            % ----------- various process flags --------- %
-           obj.do_plot_IRs = params.do_plot_IRs;
-           obj.do_plot_reflection_paths = params.do_plot_reflection_paths;
-           obj.do_plot_room = params.do_plot_room;
-           obj.do_export_audio = params.do_export_audio;
+           if isfield(params, 'do_plot_IRs')
+               obj.do_plot_IRs = params.do_plot_IRs;
+           else
+               obj.do_plot_IRs = 0;
+           end
+           if isfield(params, 'do_plot_reflection_paths')
+               obj.do_plot_reflection_paths = params.do_plot_reflection_paths;
+           else
+               obj.do_plot_reflection_paths = 0;
+           end
+           if isfield(params, 'do_plot_room')
+               obj.do_plot_room = params.do_plot_room;
+           else
+               obj.do_plot_room = 0;
+           end
+           if isfield(params, 'do_export_audio')
+               obj.do_export_audio = params.do_export_audio;
+           else
+               obj.do_export_audio = 0;
+           end           
            
            % ------ geometry (room, sources, receivers) ----- %
            obj.S = source_list;

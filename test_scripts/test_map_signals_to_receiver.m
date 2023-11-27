@@ -9,11 +9,11 @@ addpath([pwd '/../jsonlab']);
 fs = 32000;     % sampling rate
 c = 343;        % speed of sound
 len_s = 5;      % signal length in seconds
+max_order = 1;  % highest reflection order to simulate
 
 % sig_params.type = 'sine';
 % sig_params.amplitude = 1.0;
 % sig_params.frequency = 900;
-% x = generate_source_signal(sig_params, len_s, fs); 
 
 % sig_params.type = 'whitenoise';
 % sig_params.amplitude = 0.5;
@@ -22,13 +22,11 @@ len_s = 5;      % signal length in seconds
 % % [b,a] = butter(6, fc_n, 'low');
 % % sig_params.filters(1).b = b;
 % % sig_params.filters(1).a = a;
-% x = generate_source_signal(sig_params, len_s, fs);
 
 sig_params.type = 'file';
-% sig_params.file_path = 'C:\git\SpecularStudio\audio_files\IEEEMix2_16k.wav';
-sig_params.file_path = fullfile(pwd, '../../audio_files/piano_44100Hz.wav');
+% sig_params.file_path = '../audio_files/IEEEMix2_16k.wav';
+sig_params.file_path = fullfile(pwd, '../audio_files/piano_44100Hz.wav');
 sig_params.gain_dB = -12.0;
-x = generate_source_signals(sig_params, len_s, fs);
 
 
 % --------------- Reflective surfaces --------------- %
@@ -92,13 +90,25 @@ S = [PointSource([3, 5, 2])];
 R = [Receiver([4, 2, 2]),...
      Receiver([2, 2, 2])];
 
-% generate all possible image sources for a point source
-max_order = 1;
-tic;
 
-no_all_img_src = count_all_image_sources(length(walls), max_order);
+% Instantiate a SpecularStudio object
+spec_studio_params = struct();
+spec_studio_params.max_order = max_order;
+spec_studio_params.fs = fs;
+spec_studio_params.c = c;
+spec_studio_params.len_s = len_s;
+
+SpecStudio = SpecularStudio(S, R, walls, sig_params, spec_studio_params);
+
+
+tic;
+% generate emitted signals
+x = SpecStudio.generate_source_signals();
+
+% generate all image sources for a point source
+no_all_img_src = SpecStudio.count_all_image_sources();
 disp(['Generating ' num2str(no_all_img_src) ' image sources...']);
-img_list_all = generate_image_sources(S(1), walls, max_order);
+img_list_all = SpecStudio.generate_image_sources(SpecStudio.S, SpecStudio.max_order);
 
 img_lists = {};
 y = {};
@@ -108,16 +118,16 @@ for i = 1:length(R)
     % run an "audibility check" on all image sources and discard the ones that
     % are not reachable through a valid path from the receiver
     disp(['Running audibility check for mic ' num2str(i) '/' num2str(length(R)) '...']);
-    img_lists{i} = audibility_check(img_list_all, walls, R(i));
+    img_lists{i} = SpecStudio.audibility_check(img_list_all, i);
     % Assign emitted signals to each source (true source + image source) by
     % following the reflection path and applying the absorption from each wall
     % encountered along the way to the emitted signal
-    disp(['Assigning signals to image sources for mic ' num2str(i) '/' num2str(length(R)) '...']);
-    img_lists{i} = assign_signals_to_image_sources(img_lists{i}, x);
+    disp(['Assigning signals to image sources for mic ' num2str(i) '/' num2str(length(R)) '...']);    
+    img_lists{i} = SpecStudio.assign_signals_to_image_sources(img_lists{i}, x);
     % map image source signals as seen by the microphone and estimate
     % impulse response
-    disp(['Mapping signals onto mic ' num2str(i) '/' num2str(length(R)) '...']);
-    [y{i}, ir{i}] = map_signals_to_receiver(R(i), img_lists{i}, c, fs);   
+    disp(['Mapping signals onto mic ' num2str(i) '/' num2str(length(R)) '...']);    
+    [y{i}, ir{i}] = SpecStudio.map_signals_to_receiver(i, img_lists{i});
 end
 toc;
 
@@ -138,6 +148,5 @@ Y_out = [];
 for i = 1:length(R)
     Y_out = [Y_out; y{i}];
 end
-audiowrite(fullfile(pwd, ['../../output_files/wet_order_' num2str(max_order) '.wav']), Y_out', fs);
-
-% audiowrite(fullfile(pwd, ['../../output_files/dry.wav']), x, fs);
+audiowrite(fullfile(pwd, ['../output_files/wet_order_' num2str(max_order) '.wav']), Y_out', fs);
+% audiowrite(fullfile(pwd, ['../output_files/dry.wav']), x, fs);

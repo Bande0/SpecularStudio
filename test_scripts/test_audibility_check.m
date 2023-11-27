@@ -95,13 +95,23 @@ S = PointSource([3, 4, 2]);
 % Define a receiver
 R = Receiver([5, 2, 2]);
 
-% generate all image sources for a point source
-max_order = 4;
-img_list = generate_image_sources(S, walls, max_order);
+% Instantiate a SpecularStudio object
+spec_studio_params = struct();
+spec_studio_params.max_order = 4;
+% dummy parameters- not used in this test
+spec_studio_params.fs = NaN;  
+spec_studio_params.c = NaN;
+spec_studio_params.len_s = NaN;
+% empty struct here - there are no signals applied in this test
+sig_params = struct(); 
+
+SpecStudio = SpecularStudio(S, R, walls, sig_params, spec_studio_params);
+
+img_list = SpecStudio.generate_image_sources(SpecStudio.S, SpecStudio.max_order);
 
 % run an "audibility check" on all image sources and discard the ones that
 % are not reachable through a valid path from the receiver
-img_list_valid = audibility_check(img_list, walls, R);
+img_list_valid = SpecStudio.audibility_check(img_list, 1);
 
 %%  plotting
 colors = {[0 0.4470 0.7410],...
@@ -113,7 +123,7 @@ colors = {[0 0.4470 0.7410],...
               [0.6350 0.0780 0.1840],...
              };
          
-for plot_order = 1:max_order    
+for plot_order = 1:SpecStudio.max_order    
     % number of N'th order image sources
     no_refl = length(find(cellfun('length', {img_list_valid.path}) == plot_order));    
     titlestring = ['Number of ' num2str(plot_order) 'th order reflections: ' num2str(no_refl)];
