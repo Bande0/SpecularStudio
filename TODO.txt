@@ -1,6 +1,20 @@
-- plotting of TFs (not just IFs)
+BUG: plot reflection paths crashes if there is only 1 wall
+
+BUG: plot room crashes if there are no walls
+
+IR estimation:
+---> it seems like the longer the block size the more accurate the TF estimation is. Make it adaptive wrt. to signal length
 
 - file export of IRs (format?)
+	- json format?
+	- content:
+		- source location(s)
+		- receiver location(s)
+		- walls
+		- IRs
+--> try to read it back in and apply. See if you get the same results
+
+- plotting of TFs (not just IRs)
 
 - Make a plotter class?
 	- contains all the plotter functions and a common colours list for all
