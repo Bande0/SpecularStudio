@@ -51,8 +51,13 @@ array_params.squish_params.do_squish = squish;
 array_params.squish_params.height = rect_h;
 array_params.squish_params.width = rect_w;
 array_params.plane = plane;
+array_params.do_plot_mic_array_indexes = 1;
 
 R = SpecularStudio.create_array_topology(array_params);
+
+% for i = 1:length(R)
+%     R(i).location(3) = R(i).location(3) + 0.25*(rand(1) - 0.5);
+% end
 
 % % ---- plotting
 plot_mic_array_topology(R, array_params);

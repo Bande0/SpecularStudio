@@ -5,6 +5,7 @@ function plot_mic_array_topology(R, varargin)
     default_params.squish_params.height = 1;
     default_params.squish_params.do_squish = 0;
     default_params.plane = 'xy';
+    default_params.do_plot_mic_array_indexes = 0;
    
     if isempty(varargin)
         array_params = default_params;
@@ -62,7 +63,9 @@ function plot_mic_array_topology(R, varargin)
             rcv = R(i).location;
             plot3(rcv(1), rcv(2), rcv(3),'bo');
             hold on;
-        end
+            text(rcv(1) + xrange*0.05, rcv(2), rcv(3), num2str(i), 'Fontsize', 12, 'Color', [0.4940 0.1840 0.5560]); 
+        end         
+        
         grid on
         xlim([all_min-max_range*0.2 all_max+max_range*0.2]);
         ylim([all_min-max_range*0.2 all_max+max_range*0.2]);
@@ -87,10 +90,16 @@ function plot_mic_array_topology(R, varargin)
         max_x = max(max(rm(x_idx,:)), rect_w/2);
         max_y = max(max(rm(y_idx,:)), rect_h/2);
         xy_lim_min = min(min_x, min_y) * 1.2;
-        xy_lim_max = max(max_x, max_y) * 1.2;
+        xy_lim_max = max(max_x, max_y) * 1.2;        
 
         figure('units','normalized','outerposition',[0.2 0.2 0.6 0.6])
         plot(rm(x_idx,:),rm(y_idx,:),'bo');  % mic array
+        % plot mic array indexes
+        if array_params.do_plot_mic_array_indexes
+            for i = 1:length(rm)
+                text(rm(x_idx, i) + xrange*0.05, rm(y_idx, i), num2str(i), 'Fontsize', 12, 'Color', [0.4940 0.1840 0.5560]);
+            end        
+        end
         hold on;
         plot(0,0,'rx','MarkerSize',12,'LineWidth',2);  % center point
         if array_params.squish_params.do_squish

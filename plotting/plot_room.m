@@ -24,7 +24,9 @@ function plot_room(walls, S, varargin)
         n = walls(w_idx).normal;
         wp_all = [wp_all; wp]; % storing all wall points in an array for calculating axis limits later
 
-        fill3(wp(:,1), wp(:,2), wp(:,3), 'g', 'FaceAlpha', 0.5);  % surface
+        facealpha = walls(w_idx).abs_coeff * 0.9;
+        
+        fill3(wp(:,1), wp(:,2), wp(:,3), 'g', 'FaceAlpha', facealpha);  % surface
         hold on    
         quiver3(wp(1,1), wp(1,2), wp(1,3),...
                 n(1), n(2), n(3),'LineWidth', 2, 'MaxHeadSize', 0.8);  % line normal vector

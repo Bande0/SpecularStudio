@@ -20,43 +20,37 @@ classdef SpecularStudio
     methods
         function obj = SpecularStudio(source_list, mic_array, walls, sig_params, params)
             
-           % --------------- General signal properties --------------- %
-           obj.fs = params.fs;                 % sampling rate
-           obj.c = params.c;                   % speed of sound
-           obj.len_s = params.len_s;           % signal length in seconds
+            % --------------- General signal properties --------------- %
+            obj.fs = params.fs;                 % sampling rate
+            obj.c = params.c;                   % speed of sound
+            obj.len_s = params.len_s;           % signal length in seconds
            
-           % ----------- maximum reflection order to simulate --------- %
-           obj.max_order = params.max_order;   
+            % ----------- maximum reflection order to simulate --------- %
+            obj.max_order = params.max_order;   
            
-           % ----------- various process flags --------- %
-           if isfield(params, 'do_plot_IRs')
-               obj.do_plot_IRs = params.do_plot_IRs;
-           else
-               obj.do_plot_IRs = 0;
-           end
-           if isfield(params, 'do_plot_reflection_paths')
-               obj.do_plot_reflection_paths = params.do_plot_reflection_paths;
-           else
-               obj.do_plot_reflection_paths = 0;
-           end
-           if isfield(params, 'do_plot_room')
-               obj.do_plot_room = params.do_plot_room;
-           else
-               obj.do_plot_room = 0;
-           end
-           if isfield(params, 'do_export_audio')
-               obj.do_export_audio = params.do_export_audio;
-           else
-               obj.do_export_audio = 0;
-           end           
+            % ------ geometry (room, sources, receivers) ----- %
+            obj.S = source_list;
+            obj.R = mic_array;
+            obj.walls = walls;
            
-           % ------ geometry (room, sources, receivers) ----- %
-           obj.S = source_list;
-           obj.R = mic_array;
-           obj.walls = walls;
+            % ------ signals assigned to point sources
+            obj.sig_params = sig_params;    
+            
+            % ----------- various process flags --------- %
+            default_flags.do_plot_IRs = 0;
+            default_flags.do_plot_reflection_paths = 0;
+            default_flags.do_plot_room = 0;
+            default_flags.do_export_audio = 0;
            
-           % ------ signals assigned to point sources
-           obj.sig_params = sig_params;         
+            fn = fieldnames(default_flags);
+            for i = 1:length(fn)
+                if isfield(params, fn{i})
+                    obj.(fn{i}) = params.(fn{i});
+                else
+                    obj.(fn{i}) = default_flags.(fn{i});
+                end                
+            end  
+            
         end   
         
         % main simulation function
