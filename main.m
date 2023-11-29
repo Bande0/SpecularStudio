@@ -6,21 +6,17 @@ addpath(fullfile(pwd, 'utility'));
 addpath(fullfile(pwd, 'plotting'));
 
 % -------- Maximum reflection order to simulate -------- %
-max_order = 1;
+max_order = 2;
 
 % --------------- Load Room Configuration --------------- %
 room_json = 'room_default.json';
 [S, walls] = load_room_config(fullfile(pwd, 'geometry', 'room', room_json));
 
-% walls = [];
-% walls = walls(1);
-% walls = [walls(1) walls(2)];
-
 % % Uncomment this for manually defining point source locations (this will
 % % overwrite the pointsources defined in the room JSON
-S = [PointSource([3, 5, 2]),...
+% S = [PointSource([3, 5, 2]),...
 %      PointSource([3, 3, 2]),...
-    ];
+%     ];
 
 % --------------- Load Mic Array --------------- %
 mic_json = 'mic_array_default.json';
@@ -31,9 +27,9 @@ R = SpecularStudio.add_offsets_to_mic_array(R, 3, 1, 2);
 
 % % Uncomment this for manually defining receiver locations (this will
 % % overwrite the receivers defined in the mic array JSON
-R = [Receiver([4, 2, 2]),...
+% R = [Receiver([4, 2, 2]),...
 %      Receiver([2, 2, 2]),...
-     ];
+%      ];
 
 % ----------- Generate/Load signals emitted by point sources ----------- %
 fs = 32000;     % sampling rate
@@ -74,9 +70,9 @@ spec_studio_params.max_order = max_order;
 spec_studio_params.fs = fs;
 spec_studio_params.c = c;
 spec_studio_params.len_s = len_s;
-spec_studio_params.do_plot_room = 0;
+spec_studio_params.do_plot_room = 1;
 spec_studio_params.do_plot_IRs = 1;
-spec_studio_params.do_plot_reflection_paths = 0;
+spec_studio_params.do_plot_reflection_paths = 1;
 spec_studio_params.do_export_audio = 1;
 
 SpecStudio = SpecularStudio(S, R, walls, sig_params, spec_studio_params);

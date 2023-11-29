@@ -1,7 +1,3 @@
-BUG: plot reflection paths crashes if there is only 1 wall
-
-BUG: plot room crashes if there are no walls
-
 IR estimation:
 ---> it seems like the longer the block size the more accurate the TF estimation is. Make it adaptive wrt. to signal length
 
