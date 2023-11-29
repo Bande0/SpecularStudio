@@ -1,12 +1,3 @@
-- file export of IRs (format?)
-	- json format?
-	- content:
-		- source location(s)
-		- receiver location(s)
-		- walls
-		- IRs
---> try to read it back in and apply. See if you get the same results
-
 - plotting of TFs (not just IRs)
 
 - Make a plotter class?
@@ -18,4 +9,6 @@
 
 - Add more advanced absorption modelling (using filtfilt)?
 
-- When beamforming/EC evaluation part is done, try the free Treble tool trial and inspect the differences
+- When beamforming/EC evaluation part is done:
+	- try running an evaluation on exported audio signals (or inline audio signals) and on signals acquired by re-loading and applying saved IRs. I can see there is a difference in the resulting signals but how does it affect the EC/beamformer?
+	- try the free Treble tool trial and inspect the differences
