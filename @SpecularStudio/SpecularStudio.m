@@ -15,6 +15,7 @@ classdef SpecularStudio
        do_plot_room
        do_plot_reflection_paths
        do_export_audio
+       do_export_irs
     end
     
     methods
@@ -41,6 +42,7 @@ classdef SpecularStudio
             default_flags.do_plot_reflection_paths = 0;
             default_flags.do_plot_room = 0;
             default_flags.do_export_audio = 0;
+            default_flags.do_export_irs = 0;
            
             fn = fieldnames(default_flags);
             for i = 1:length(fn)

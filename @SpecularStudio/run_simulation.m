@@ -60,37 +60,36 @@ function [x, y, ir] = run_simulation(obj)
             if ~exist(fullfile(pwd, 'output_files'), 'dir')
                 mkdir(fullfile(pwd, 'output_files'));
             end
-            audiowrite(fullfile(pwd, ['output_files/' obj.sig_params(i_src).name '_wet_order_' num2str(obj.max_order) '_mics_' num2str(length(obj.R)) '.wav']), Y_out', obj.fs);   
-            audiowrite(fullfile(pwd, ['output_files/' obj.sig_params(i_src).name '_dry.wav']), x(i_src, :), obj.fs);
-            disp([char(10) 'Output files exported to: ' char(10) fullfile(pwd, 'output_files')]);
+            if ~exist(fullfile(pwd, 'output_files', 'audio'), 'dir')
+                mkdir(fullfile(pwd, 'output_files', 'audio'));
+            end
+            filename_wet = [obj.sig_params(i_src).name '_wet_order_' num2str(obj.max_order) '_mics_' num2str(length(obj.R)) '.wav'];
+            filename_dry = [obj.sig_params(i_src).name '_dry.wav'];
+            audiowrite(fullfile(pwd, 'output_files', 'audio', filename_wet), Y_out', obj.fs);   
+            audiowrite(fullfile(pwd, 'output_files', 'audio', filename_dry), x(i_src, :), obj.fs);
+            disp([char(10) 'Audio files exported to: ' char(10) fullfile(pwd, 'output_files', 'audio')]);
         end
         
-        out_struct = struct();
-        out_struct.source = obj.S(i_src).location;
-        out_struct.receivers = obj.R;
-        out_struct.walls = obj.walls;
-        out_struct.ir = [ir{i_src, :}];
         
-        filepath = fullfile(pwd, 'test_ir.json');
-        savejson('', out_struct, filepath);
-        
-        in_struct = loadjson(filepath);
-        
-        y2 = {};
-        for i = 1:length(obj.R)
-            y2{i} = filter(in_struct.ir(1:1024, 1), 1, x);
-        end
-        
-        figure()
-        subplot(211)
-        plot(y{1})
-        hold on
-        plot(y2{1})
-        subplot(212)
-        plot(y{1})
-        hold on
-        plot(y{1} - y2{1})
+        %% export IRs
+        if obj.do_export_irs
+            if ~exist(fullfile(pwd, 'output_files', 'IRs'), 'dir')
+                mkdir(fullfile(pwd, 'output_files', 'IRs'));
+            end
+            
+            out_struct = struct();
+            out_struct.source = obj.S(i_src).location;
+            out_struct.receivers = obj.R;
+            out_struct.walls = obj.walls;
+            out_struct.ir = [ir{i_src, :}];
 
+            filename = ['ir_src_' num2str(i_src) '_order_' num2str(obj.max_order) '_mics_' num2str(length(obj.R)) '.json'];
+            filepath = fullfile(pwd, 'output_files', 'IRs', filename);
+            savejson('', out_struct, filepath);      
+            
+            disp([char(10) 'IRs exported to: ' char(10) fullfile(pwd, 'output_files', 'IRs')]);
+        end
+        
     %     %% playback
     %     Y = [y{i_src, 1}; y{i_src, 2}];
     %     soundsc(x(i_src, :), obj.fs);

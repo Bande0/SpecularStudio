@@ -1,6 +1,3 @@
-IR estimation:
----> it seems like the longer the block size the more accurate the TF estimation is. Make it adaptive wrt. to signal length
-
 - file export of IRs (format?)
 	- json format?
 	- content:

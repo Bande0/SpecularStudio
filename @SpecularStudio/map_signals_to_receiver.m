@@ -46,7 +46,8 @@ end
 % necessary length for estimated impulse responses accordingly
 max_delay_samples = max(r_src)/c * fs;
 ir_len = 2^nextpow2(max_delay_samples); % length of IRs
-N = ir_len * 8;
+no_blocks = 8;  % number of blocks we want to divide the full signal into 
+N = 2^(nextpow2(no_samples / no_blocks) - 1);  % block size that satisfies this
 
 % map source signals onto mics
 y = zeros(1, no_samples);
