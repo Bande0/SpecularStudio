@@ -41,7 +41,7 @@ function [x, y, ir] = run_simulation(obj)
             % plot all max.order reflection paths for current source and
             % receiver
             if obj.do_plot_reflection_paths
-                plot_reflection_paths(obj.walls, img_lists, i_src, i_rcv, obj.max_order);
+                plot_room(obj.walls, obj.S, obj.R, img_lists, i_src, i_rcv, obj.max_order);
             end
         end
         toc;
