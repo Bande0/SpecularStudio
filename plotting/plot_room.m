@@ -1,4 +1,4 @@
-function plot_room(walls, sources, varargin)
+function fh = plot_room(walls, sources, varargin)
 % plots a room geometry + optionally N'th order reflection paths between a
 % source and a receiver
 % Walls and source(s) are mandatory arguments, the rest is optional (used
@@ -50,7 +50,7 @@ function plot_room(walls, sources, varargin)
               [0.6350 0.0780 0.1840],...
              };
             
-    figure()
+    fh = figure();
     hold on
     
     % plotting walls
