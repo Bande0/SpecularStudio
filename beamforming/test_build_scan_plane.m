@@ -9,7 +9,7 @@ addpath(fullfile(pwd, '..', 'plotting'));
 % speed of sound
 c = 343;
 % map resolution
-res = 40;
+res = 20;
 
 % --------------- Load Mic Array --------------- %
 mic_json = 'mic_array_default.json';
@@ -48,24 +48,16 @@ S = [PointSource([3, 5, 2]),...
 %      PointSource([3, 3, 2]),...
     ];                          
 
+% build points on the scan plane
 sp = scan_plane.points;
-
 opp_1 = find_opposite_point(scan_plane, 1);
 
-xstart = sp(1,1);
-ystart = sp(1,2);
-zstart = sp(1,3);
-xend = sp(opp_1,1);
-yend = sp(opp_1,2);
-zend = sp(opp_1,3);
+x_sweep = linspace(sp(1,1), sp(opp_1,1), res);
+y_sweep = linspace(sp(1,2), sp(opp_1,2), res);
+z_sweep = linspace(sp(1,3), sp(opp_1,3), res);
 
-x_sweep = linspace(xstart, xend, res);
-y_sweep = linspace(ystart, yend, res);
-z_sweep = linspace(zstart, zend, res);
-
-% build points on the scan plane
 cnt = 1;
-if zstart == zend
+if z_sweep(1) == z_sweep(end)
     for i = 1:res
         for j = 1:res       
             scan_plane_points(cnt) = Receiver([x_sweep(j), y_sweep(i), z_sweep(j)]);
@@ -119,6 +111,7 @@ end
 %%
 % Plot the beamformed scan map
 [X,Z] = meshgrid(x_sweep, z_sweep);
+figure();
 surface(X, Z, 20*log10(abs(Y_map)));
 
 %%
