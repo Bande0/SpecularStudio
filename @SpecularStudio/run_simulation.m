@@ -20,7 +20,7 @@ function [x, y, ir] = run_simulation(obj)
         tic;
 
         no_all_img_src = obj.count_all_image_sources();
-        disp(['Generating ' num2str(no_all_img_src) ' image sources for point source no.' num2str(i_src) '...']);
+        disp(['Generating ' num2str(no_all_img_src) ' image sources for point source no. ' num2str(i_src) '/' num2str(length(obj.S)) '...']);
         % generate all possible image sources ("valid and "invalid") for a point source
         img_list_all = obj.generate_image_sources(obj.S(i_src), obj.max_order);
 

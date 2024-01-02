@@ -84,9 +84,9 @@ function fh = plot_room(walls, sources, varargin)
     for i = 1:length(R)
         rcv = R(i).location;
         if length(varargin) > 4
-            plot3(rcv(1), rcv(2), rcv(3),'kx','MarkerSize',10,'LineWidth',3);
+            plot3(rcv(1), rcv(2), rcv(3),'ro','MarkerSize',5,'LineWidth',3);
         else
-            plot3(rcv(1), rcv(2), rcv(3),'k.','MarkerSize',10);
+            plot3(rcv(1), rcv(2), rcv(3),'r.','MarkerSize',10);
         end
     end
     
